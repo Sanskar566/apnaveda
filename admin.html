@@ -1472,4 +1472,48 @@
         }
     </script>
 </body>
+    function handleSaveProduct(e) {
+    e.preventDefault();
+    const editId = document.getElementById('p-edit-id').value.trim();
+
+    let finalGallery = [];
+    if (uploadedImagesList.length > 0) {
+        finalGallery = uploadedImagesList;
+    } else if (editId) {
+        const existing = liveProducts.find(x => x.docId === editId);
+        if (existing && existing.gallery && existing.gallery.length > 0) {
+            finalGallery = existing.gallery;
+        }
+    }
+    if (finalGallery.length === 0) {
+        const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
+        finalGallery = [fallback || 'images/moringa.jpg'];
+    }
+
+    const prodObj = {
+        name: document.getElementById('p-name').value.trim(),
+        price: Number(document.getElementById('p-price').value.trim()),
+        mrp: Number(document.getElementById('p-mrp').value.trim()),
+        badge: document.getElementById('p-badge').value.trim(),
+        weight: document.getElementById('p-weight').value.trim(),
+        stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
+        image: finalGallery[0],
+        gallery: finalGallery,
+        desc: document.getElementById('p-desc').value.trim(),
+        updatedAt: new Date().toISOString()
+    };
+
+    if (editId) {
+        db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
+            alert("✓ Product Cloud Database me update ho gaya!");
+            resetProductForm();
+        }).catch(err => alert("Update Error: " + err.message));
+    } else {
+        prodObj.createdAt = new Date().toISOString();
+        db.collection("products").add(prodObj).then(() => {
+            alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
+            resetProductForm();
+        }).catch(err => alert("Save Error: " + err.message));
+    }
+}
 </html>
