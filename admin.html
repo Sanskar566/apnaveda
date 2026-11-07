@@ -7,27 +7,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Firebase Core Libraries -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Core SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
-<script>
-  // Firebase Initialize
-  const firebaseConfig = {
-    apiKey: "AIzaSyAwaWZrrvMK-ySVJLuTSZy9dPf6ZwMDNKc",
-    authDomain: "apnaveda-b71dd.firebaseapp.com",
-    projectId: "apnaveda-b71dd",
-    storageBucket: "apnaveda-b71dd.firebasestorage.app",
-    messagingSenderId: "757724960467",
-    appId: "1:757724960467:web:f4bd04cb8bed1bf4a32626",
-    measurementId: "G-2D4CYL9MFL"
-  };
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-  window.db = firebase.firestore();
-</script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAwaWZrrvMK-ySVJLuTSZy9dPf6ZwMDNKc",
+        authDomain: "apnaveda-b71dd.firebaseapp.com",
+        projectId: "apnaveda-b71dd",
+        storageBucket: "apnaveda-b71dd.firebasestorage.app",
+        messagingSenderId: "757724960467",
+        appId: "1:757724960467:web:f4bd04cb8bed1bf4a32626",
+        measurementId: "G-2D4CYL9MFL"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      window.db = firebase.firestore();
+    </script>
+
     <style>
         :root {
             --primary: #1b5e20;
@@ -173,11 +174,6 @@
             gap: 6px;
         }
     </style>
-
-    <!-- Firebase SDKs Loaded First -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -294,9 +290,9 @@
                             </div>
                         </div>
                         <div>
-                            <label>Upload Photos (Ctrl दबाकर तस्वीरें चुनें)</label>
-                            <input type="file" id="p-file-input" accept="image/*" multiple onchange="handleMultipleImageUpload(event)" style="margin-bottom: 6px;">
-                            <input type="text" id="p-image" placeholder="या इमेज लिंक: images/moringa.jpg">
+                            <label>Upload Photo (या इमेज लिंक दें)</label>
+                            <input type="file" id="p-file-input" accept="image/*" onchange="handleSingleImageUpload(event)" style="margin-bottom: 6px;">
+                            <input type="text" id="p-image" placeholder="images/moringa.jpg" value="images/moringa.jpg">
                         </div>
                     </div>
                     <div id="image-preview-container" style="margin: 10px 0 16px; display: flex; gap: 10px; flex-wrap: wrap;"></div>
@@ -339,10 +335,7 @@
         <div id="tab-reviews" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
-                    <div>
-                        <h3>⭐ Add 5-Star Reviews & Rating Directly</h3>
-                        <small style="color: var(--text-muted);">यहाँ से आप जितने चाहें उतने 5-स्टार रिव्यूज सीधे प्रोडक्ट पर अपलोड कर सकते हैं।</small>
-                    </div>
+                    <h3>⭐ Add 5-Star Reviews & Rating Directly</h3>
                 </div>
                 <form id="admin-review-form" onsubmit="handleAdminAddReview(event)">
                     <div class="form-grid-3">
@@ -406,14 +399,11 @@
             </div>
         </div>
 
-        <!-- 4. TAB: CONTENT MANAGER -->
+        <!-- 4. TAB: APLUS CONTENT -->
         <div id="tab-aplus" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
-                    <div>
-                        <h3>🌟 apnaVeda™ Content & Rich Product Showcase</h3>
-                        <small style="color: var(--text-muted);">अपने प्रोडक्ट पेज पर Amazon EBC जैसा 970×600 ब्रांड बैनर और फ़ीचर्स सेट करें।</small>
-                    </div>
+                    <h3>🌟 apnaVeda™ Content & Rich Product Showcase</h3>
                 </div>
                 <form id="aplus-form" onsubmit="handleSaveAPlusContent(event)">
                     <div class="form-grid-2">
@@ -422,7 +412,7 @@
                             <select id="aplus-product-select" onchange="loadProductAPlusData()"></select>
                         </div>
                         <div>
-                            <label>A+ Brand Header Banner (970×600 Image Link)</label>
+                            <label>A+ Brand Header Banner (Image Link)</label>
                             <input type="text" id="aplus-banner-img" value="images/banner.jpg" required>
                         </div>
                     </div>
@@ -444,20 +434,6 @@
                                 <label>Feature 3: Title & Short Text</label>
                                 <input type="text" id="aplus-f3-title" value="Micro-Pulverized Texture">
                                 <textarea id="aplus-f3-desc" rows="2">Super-fine grinding ensures smooth mix in water and meals.</textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sub-box">
-                        <div class="sub-box-title">📊 Nutrition & Sourcing Matrix</div>
-                        <div class="form-grid-2">
-                            <div>
-                                <label>Farm Sourcing Origin Story</label>
-                                <textarea id="aplus-sourcing" rows="3">Organically grown by local farmers with zero chemical fertilizers, hand-harvested and hygienically processed at our Mau, Uttar Pradesh unit.</textarea>
-                            </div>
-                            <div>
-                                <label>Nutrition Facts / Key Nutrients</label>
-                                <textarea id="aplus-nutrition" rows="3">7x Vitamin C of Oranges, 4x Calcium of Milk, 4x Vitamin A of Carrots, 90+ Nutrients & 46 Antioxidants.</textarea>
                             </div>
                         </div>
                     </div>
@@ -549,13 +525,11 @@
                             <input type="text" id="lab-summary" value="100% Pesticide & Heavy Metal Free (Lead, Arsenic ND)" required>
                         </div>
                         <div>
-                            <label>PDF / Certificate File (Direct PC से चुनें)</label>
-                            <input type="file" id="lab-file-picker" accept=".pdf,image/*" onchange="uploadDirectLabDoc(event)" style="margin-bottom: 6px;">
+                            <label>PDF / Certificate File Link</label>
                             <input type="text" id="lab-pdf-link" placeholder="reports/moringa-nabl-report.pdf" required>
-                            <div id="lab-upload-status" style="font-size: 11px; margin-top: 4px;"></div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-green" onclick="saveDirectLabReport()">➕ Add Lab Certificate to Cloud</button>
+                    <button type="submit" class="btn btn-green">➕ Add Lab Certificate to Cloud</button>
                 </form>
             </div>
             <div class="admin-section">
@@ -585,10 +559,7 @@
         <div id="tab-policies" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
-                    <div>
-                        <h3>📜 Legal & Policy Content Editor</h3>
-                        <small style="color:var(--text-muted);">यहाँ किया गया बदलाव सीधे Cloud Firestore पर सेव होगा।</small>
-                    </div>
+                    <h3>📜 Legal & Policy Content Editor</h3>
                 </div>
                 <form id="policy-form" onsubmit="handleSavePolicies(event)">
                     <div class="sub-box">
@@ -618,7 +589,6 @@
                 <div class="section-header">
                     <div>
                         <h3>👥 Customer Contact Directory</h3>
-                        <small style="color: var(--text-muted);">Export list for records & WhatsApp broadcasts.</small>
                     </div>
                     <div style="display: flex; gap: 8px;">
                         <button onclick="downloadCustomerExcel()" class="btn btn-green">📥 Download Excel / CSV</button>
@@ -647,7 +617,7 @@
         <div id="tab-cashback" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
-                    <h3>🎁 ₹30 Cashback Requests (Single-Use Coupon Protected)</h3>
+                    <h3>🎁 ₹30 Cashback Requests</h3>
                 </div>
                 <div class="table-responsive">
                     <table>
@@ -698,7 +668,7 @@
             </div>
         </div>
 
-        <!-- 11. TAB: MASTER SETTINGS (LOGO, BANNERS, VIDEO, SOCIAL & FOOTER) -->
+        <!-- 11. TAB: MASTER SETTINGS -->
         <div id="tab-settings" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
@@ -709,16 +679,12 @@
                         <div class="sub-box-title">🖼️ Brand Logo & Visual Assets</div>
                         <div class="form-grid-2">
                             <div>
-                                <label>apnaVeda Logo (Direct Computer से चुनें)</label>
-                                <input type="file" accept="image/*" onchange="uploadDirectLogo(event)" style="margin-bottom: 6px;">
+                                <label>apnaVeda Logo URL</label>
                                 <input type="text" id="set-logo-url" value="images/logo.png" required>
-                                <div id="logo-preview-area" style="margin-top: 4px;"></div>
                             </div>
                             <div>
-                                <label>Favicon Icon (.ico / .png / .jpg - Direct PC se chunein)</label>
-                                <input type="file" accept="image/*,.ico" onchange="uploadDirectFavicon(event)" style="margin-bottom: 6px;">
+                                <label>Favicon URL</label>
                                 <input type="text" id="set-favicon-url" value="images/favicon.ico" required>
-                                <div id="favicon-preview-area" style="margin-top: 4px;"></div>
                             </div>
                         </div>
                     </div>
@@ -748,30 +714,14 @@
                                 <input type="text" id="set-banner-title" value="Pure, Farm-Fresh Ayurvedic Superfoods Delivered to Your Doorstep">
                             </div>
                             <div>
-                                <label>Hero Banner Image (Direct PC से चुनें या लिंक दें)</label>
-                                <input type="file" accept="image/*" onchange="uploadDirectHeroBanner(event)" style="margin-bottom: 6px;">
+                                <label>Hero Banner Image Link</label>
                                 <input type="text" id="set-banner-img" value="images/banner.jpg" required>
-                                <div id="hero-banner-preview-area" style="margin-top: 4px;"></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="sub-box">
-                        <div class="sub-box-title">🎥 "Watch Our Sourcing & Traditional Processing" YouTube Video</div>
-                        <div class="form-grid-2">
-                            <div>
-                                <label>YouTube Video ID or Embed Link</label>
-                                <input type="text" id="set-yt-video" placeholder="e.g. dQw4w9WgXcQ or https://youtu.be/..." value="">
-                            </div>
-                            <div>
-                                <label>Section Heading Text</label>
-                                <input type="text" id="set-yt-title" value="Watch Our Pure Sourcing & Traditional Processing">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sub-box">
-                        <div class="sub-box-title">📍 Official Addresses & Contacts</div>
+                        <div class="sub-box-title">📍 Official Contacts</div>
                         <div class="form-grid-2">
                             <div>
                                 <label>Official Support Phone</label>
@@ -782,60 +732,6 @@
                                 <input type="email" id="set-email" value="apnaveda.help@gmail.com" required>
                             </div>
                         </div>
-                        <div class="form-grid-2">
-                            <div>
-                                <label>Shipping / Warehouse Origin Address</label>
-                                <input type="text" id="set-ship-addr" value="Tajpur Mathiya, Mau, Uttar Pradesh - 275101" required>
-                            </div>
-                            <div>
-                                <label>Corporate Office Address</label>
-                                <input type="text" id="set-office-addr" value="Tajpur Mathiya, Mau, Uttar Pradesh - 275101" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sub-box">
-                        <div class="sub-box-title">🌐 Social Channels (All 6 Networks)</div>
-                        <div class="form-grid-3">
-                            <div>
-                                <label>Instagram URL</label>
-                                <input type="text" id="set-soc-insta" placeholder="https://instagram.com/apnaveda90">
-                            </div>
-                            <div>
-                                <label>Facebook URL</label>
-                                <input type="text" id="set-soc-fb" placeholder="https://facebook.com/apnaveda">
-                            </div>
-                            <div>
-                                <label>YouTube Channel URL</label>
-                                <input type="text" id="set-soc-yt" placeholder="https://youtube.com/@apnaveda">
-                            </div>
-                        </div>
-                        <div class="form-grid-3">
-                            <div>
-                                <label>Pinterest URL</label>
-                                <input type="text" id="set-soc-pin" placeholder="https://pinterest.com/apnaveda">
-                            </div>
-                            <div>
-                                <label>LinkedIn URL</label>
-                                <input type="text" id="set-soc-linkedin" placeholder="https://linkedin.com/company/apnaveda">
-                            </div>
-                            <div>
-                                <label>X (Twitter) URL</label>
-                                <input type="text" id="set-soc-x" placeholder="https://x.com/apnaveda">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sub-box">
-                        <div class="sub-box-title">📝 Website Footer Customizer</div>
-                        <div>
-                            <label>Footer About Paragraph</label>
-                            <textarea id="set-footer-about" rows="2">apnaVeda™ is dedicated to delivering 100% pure, unadulterated, lab-tested Ayurvedic superfoods directly from ethical farmers to your home.</textarea>
-                        </div>
-                        <div>
-                            <label>Copyright Line</label>
-                            <input type="text" id="set-footer-copy" value="© 2026 apnaVeda™. All Rights Reserved. Aksharika Enterprises.">
-                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-green" style="padding: 14px 28px; font-size: 14px;">💾 Save Complete Configuration</button>
@@ -843,13 +739,12 @@
             </div>
         </div>
 
-        <!-- 12. TAB: 3% AFFILIATE MANAGER -->
+        <!-- 12. TAB: AFFILIATE MANAGER -->
         <div id="tab-affiliates" class="admin-pane" style="display: none;">
             <div class="admin-section">
                 <div class="section-header">
                     <div>
                         <h3>🤝 apnaVeda™ Affiliate Partners (3% Commission)</h3>
-                        <small style="color: var(--text-muted);">यहाँ से आप सभी एफिलिएट पार्टनर्स के क्लिक्स, ऑर्डर्स, कमीशन और बैंक/UPI डिटेल्स देख सकते हैं।</small>
                     </div>
                     <button type="button" class="btn btn-blue" onclick="renderAdminAffiliates()">🔄 Refresh List</button>
                 </div>
@@ -862,7 +757,6 @@
                                 <th>सफल ऑर्डर्स</th>
                                 <th>कुल बिक्री</th>
                                 <th>3% कमीशन (Due)</th>
-                                <th>बैंक / UPI डिटेल्स</th>
                                 <th>एक्शन</th>
                             </tr>
                         </thead>
@@ -874,13 +768,15 @@
 
     </div>
 
-    <!-- EXTERNAL CONTROLLER SCRIPT -->
+    <!-- ADMIN CONTROLLER JAVASCRIPT -->
     <script src="admin.js"></script>
 
-    <!-- INLINE FIRESTORE PRODUCTS & INTERFACE LOGIC -->
+    <!-- INLINE ENGINE -->
     <script>
         let liveProducts = [];
+        let singleUploadedImage = '';
 
+        // Tab Switching Logic
         function switchSection(paneId, btn) {
             document.querySelectorAll('.admin-pane').forEach(p => p.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -936,7 +832,7 @@
             const batch = db.batch();
             defaults.forEach(p => {
                 const docRef = db.collection("products").doc();
-                batch.set(docRef, { ...p, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                batch.set(docRef, { ...p, createdAt: new Date().toISOString() });
             });
             batch.commit();
         }
@@ -971,63 +867,46 @@
             });
         }
 
-        let uploadedImagesList = [];
-        function handleMultipleImageUpload(event) {
-            const files = event.target.files;
-            if (!files || files.length === 0) return;
+        function handleSingleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            uploadedImagesList = [];
-            const previewContainer = document.getElementById('image-preview-container');
-            if (previewContainer) previewContainer.innerHTML = '';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400;
+                    const scaleSize = Math.min(1, MAX_WIDTH / img.width);
+                    canvas.width = img.width * scaleSize;
+                    canvas.height = img.height * scaleSize;
 
-            Array.from(files).forEach((file) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 500;
-                        const scaleSize = Math.min(1, MAX_WIDTH / img.width);
-                        canvas.width = img.width * scaleSize;
-                        canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    singleUploadedImage = canvas.toDataURL('image/jpeg', 0.6);
 
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                        uploadedImagesList.push(compressedBase64);
-
-                        if (previewContainer) {
-                            previewContainer.innerHTML += `
-                                <div style="position:relative; width: 65px; height: 65px; border-radius: 6px; overflow: hidden; border: 1px solid #1b5e20;">
-                                    <img src="${compressedBase64}" style="width: 100%; height: 100%; object-fit: cover;">
-                                    <span style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: #fff; font-size: 9px; text-align: center;">#${uploadedImagesList.length}</span>
-                                </div>
-                            `;
-                        }
-                    };
+                    const previewContainer = document.getElementById('image-preview-container');
+                    if (previewContainer) {
+                        previewContainer.innerHTML = `
+                            <div style="position:relative; width: 65px; height: 65px; border-radius: 6px; overflow: hidden; border: 1px solid #1b5e20;">
+                                <img src="${singleUploadedImage}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        `;
+                    }
                 };
-                reader.readAsDataURL(file);
-            });
+            };
+            reader.readAsDataURL(file);
         }
 
         function handleSaveProduct(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const editId = document.getElementById('p-edit-id').value.trim();
 
-            let finalGallery = [];
-            if (uploadedImagesList.length > 0) {
-                finalGallery = uploadedImagesList;
-            } else if (editId) {
-                const existing = liveProducts.find(x => x.docId === editId);
-                if (existing && existing.gallery && existing.gallery.length > 0) {
-                    finalGallery = existing.gallery;
-                }
-            }
-            if (finalGallery.length === 0) {
-                const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
-                finalGallery = [fallback || 'images/moringa.jpg'];
+            let targetImage = singleUploadedImage;
+            if (!targetImage) {
+                targetImage = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
             }
 
             const prodObj = {
@@ -1037,10 +916,10 @@
                 badge: document.getElementById('p-badge').value.trim(),
                 weight: document.getElementById('p-weight').value.trim(),
                 stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
-                image: finalGallery[0],
-                gallery: finalGallery,
+                image: targetImage || 'images/moringa.jpg',
+                gallery: [targetImage || 'images/moringa.jpg'],
                 desc: document.getElementById('p-desc').value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                updatedAt: new Date().toISOString()
             };
 
             if (editId) {
@@ -1049,7 +928,7 @@
                     resetProductForm();
                 }).catch(err => alert("Update Error: " + err.message));
             } else {
-                prodObj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                prodObj.createdAt = new Date().toISOString();
                 db.collection("products").add(prodObj).then(() => {
                     alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
                     resetProductForm();
@@ -1083,7 +962,7 @@
             document.getElementById('p-save-btn').innerText = "Save Product to Cloud Store";
             document.getElementById('p-cancel-btn').style.display = "none";
             if (document.getElementById('p-stock')) document.getElementById('p-stock').value = 'in_stock';
-            uploadedImagesList = [];
+            singleUploadedImage = '';
             const previewContainer = document.getElementById('image-preview-container');
             if (previewContainer) previewContainer.innerHTML = '';
         }
@@ -1115,7 +994,7 @@
 
         // 2. REVIEWS: FIRESTORE DIRECT
         function listenToLiveReviews() {
-            db.collection("reviews").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+            db.collection("reviews").onSnapshot((snapshot) => {
                 const tbody = document.getElementById('reviews-tbody');
                 if (!tbody) return;
                 if (snapshot.empty) {
@@ -1131,7 +1010,7 @@
                         <tr>
                             <td>${idx++}</td>
                             <td><strong>${r.productName || ''}</strong></td>
-                            <td>${r.reviewerName || ''} ${r.verified ? '<span style="color:#16a34a; font-weight:bold; font-size:11px;">✓</span>' : ''}</td>
+                            <td>${r.reviewerName || ''}</td>
                             <td style="color:#f59e0b; font-size:14px;">${stars}</td>
                             <td style="max-width:350px;">${r.comment || ''}</td>
                             <td>${r.date || 'Recent'}</td>
@@ -1151,75 +1030,26 @@
                 comment: document.getElementById('rev-comment-input').value.trim(),
                 date: document.getElementById('rev-date-input').value.trim(),
                 verified: document.getElementById('rev-verified-input').value === 'true',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                createdAt: new Date().toISOString()
             };
 
             db.collection("reviews").add(newRev).then(() => {
                 document.getElementById('admin-review-form').reset();
-                document.getElementById('rev-date-input').value = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
                 alert("✓ Review Cloud Database me add ho gaya!");
-            }).catch(err => alert("Error adding review: " + err.message));
+            }).catch(err => alert("Error: " + err.message));
         }
 
         function deleteReviewCloud(docId) {
             if (confirm("Delete this review from Cloud?")) {
-                db.collection("reviews").doc(docId).delete().then(() => {
-                    alert("✓ Review deleted!");
-                }).catch(err => alert("Error: " + err.message));
+                db.collection("reviews").doc(docId).delete().then(() => alert("✓ Review deleted!"));
             }
         }
 
-        // 3. AMAZON A+ CONTENT
-        function loadProductAPlusData() {
-            const prodName = document.getElementById('aplus-product-select').value;
-            if (!prodName) return;
-            db.collection("aplus_content").doc(encodeURIComponent(prodName)).get().then(doc => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('aplus-banner-img').value = data.bannerImg || "images/banner.jpg";
-                    document.getElementById('aplus-f1-title').value = data.f1Title || "";
-                    document.getElementById('aplus-f1-desc').value = data.f1Desc || "";
-                    document.getElementById('aplus-f2-title').value = data.f2Title || "";
-                    document.getElementById('aplus-f2-desc').value = data.f2Desc || "";
-                    document.getElementById('aplus-f3-title').value = data.f3Title || "";
-                    document.getElementById('aplus-f3-desc').value = data.f3Desc || "";
-                    document.getElementById('aplus-sourcing').value = data.sourcing || "";
-                    document.getElementById('aplus-nutrition').value = data.nutrition || "";
-                }
-            });
-        }
-
-        function handleSaveAPlusContent(e) {
-            e.preventDefault();
-            const prodName = document.getElementById('aplus-product-select').value;
-            const content = {
-                productName: prodName,
-                bannerImg: document.getElementById('aplus-banner-img').value.trim(),
-                f1Title: document.getElementById('aplus-f1-title').value.trim(),
-                f1Desc: document.getElementById('aplus-f1-desc').value.trim(),
-                f2Title: document.getElementById('aplus-f2-title').value.trim(),
-                f2Desc: document.getElementById('aplus-f2-desc').value.trim(),
-                f3Title: document.getElementById('aplus-f3-title').value.trim(),
-                f3Desc: document.getElementById('aplus-f3-desc').value.trim(),
-                sourcing: document.getElementById('aplus-sourcing').value.trim(),
-                nutrition: document.getElementById('aplus-nutrition').value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("aplus_content").doc(encodeURIComponent(prodName)).set(content, { merge: true }).then(() => {
-                alert(`✓ A+ Content Cloud me save ho gaya: ${prodName}`);
-            }).catch(err => alert("Error saving A+ Content: " + err.message));
-        }
-
-        // 4. BLOGS: FIRESTORE DIRECT
+        // 3. BLOGS: FIRESTORE DIRECT
         function listenToLiveBlogs() {
-            db.collection("blogs").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+            db.collection("blogs").onSnapshot(snapshot => {
                 const tbody = document.getElementById('blogs-tbody');
                 if (!tbody) return;
-                if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#888;">No blogs in Firestore.</td></tr>`;
-                    return;
-                }
                 tbody.innerHTML = '';
                 let idx = 1;
                 snapshot.forEach(doc => {
@@ -1230,7 +1060,7 @@
                             <td><strong>${b.title}</strong></td>
                             <td>${b.author}</td>
                             <td>${b.date || 'Recent'}</td>
-                            <td><button onclick="deleteBlogCloud('${doc.id}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
+                            <td><button onclick="db.collection('blogs').doc('${doc.id}').delete()" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
                         </tr>
                     `;
                 });
@@ -1246,32 +1076,20 @@
                 readtime: document.getElementById('b-readtime').value.trim(),
                 content: document.getElementById('b-content').value.trim(),
                 date: new Date().toLocaleDateString('en-IN'),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                createdAt: new Date().toISOString()
             };
 
             db.collection("blogs").add(newBlog).then(() => {
                 document.getElementById('blog-form').reset();
                 alert("✓ Blog post Cloud Firestore par publish ho gaya!");
-            }).catch(err => alert("Error publishing blog: " + err.message));
+            });
         }
 
-        function deleteBlogCloud(docId) {
-            if (confirm("Delete this blog from Cloud?")) {
-                db.collection("blogs").doc(docId).delete().then(() => {
-                    alert("✓ Blog deleted!");
-                }).catch(err => alert("Error: " + err.message));
-            }
-        }
-
-        // 5. NABL LAB REPORTS: FIRESTORE DIRECT
+        // 4. LAB REPORTS: FIRESTORE DIRECT
         function listenToLiveLabReports() {
-            db.collection("lab_reports").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+            db.collection("lab_reports").onSnapshot(snapshot => {
                 const tbody = document.getElementById('lab-tbody');
                 if (!tbody) return;
-                if (snapshot.empty) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No lab reports in Firestore.</td></tr>`;
-                    return;
-                }
                 tbody.innerHTML = '';
                 let idx = 1;
                 snapshot.forEach(doc => {
@@ -1282,384 +1100,146 @@
                             <td><strong>${r.product}</strong></td>
                             <td>${r.batch}</td>
                             <td>${r.lab}</td>
-                            <td><span style="color:#1b5e20; font-weight:600;">${r.summary}</span></td>
-                            <td><a href="${r.pdfLink}" target="_blank" style="color:#2563eb; font-weight:bold;">View Document ↗</a></td>
-                            <td><button onclick="deleteLabReportCloud('${doc.id}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
+                            <td>${r.summary}</td>
+                            <td><a href="${r.pdfLink}" target="_blank">View Doc ↗</a></td>
+                            <td><button onclick="db.collection('lab_reports').doc('${doc.id}').delete()" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
                         </tr>
                     `;
                 });
             });
         }
 
-        function deleteLabReportCloud(docId) {
-            if (confirm("Delete this lab report from Cloud?")) {
-                db.collection("lab_reports").doc(docId).delete().then(() => {
-                    alert("✓ Lab Report deleted!");
-                }).catch(err => alert("Error: " + err.message));
-            }
+        function handleSaveLabReport(e) {
+            e.preventDefault();
+            const rep = {
+                product: document.getElementById('lab-product').value.trim(),
+                batch: document.getElementById('lab-batch').value.trim(),
+                lab: document.getElementById('lab-name').value.trim(),
+                summary: document.getElementById('lab-summary').value.trim(),
+                pdfLink: document.getElementById('lab-pdf-link').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            db.collection("lab_reports").add(rep).then(() => {
+                document.getElementById('lab-form').reset();
+                alert("✓ Lab Report Added Successfully!");
+            });
         }
 
-        // 6. LEGAL POLICIES: FIRESTORE DIRECT
+        // 5. LEGAL POLICIES
         function loadLivePolicies() {
             db.collection("settings").doc("policies").get().then(doc => {
                 if (doc.exists) {
                     const p = doc.data();
-                    if (p.privacy && document.getElementById('pol-privacy')) document.getElementById('pol-privacy').value = p.privacy;
-                    if (p.terms && document.getElementById('pol-terms')) document.getElementById('pol-terms').value = p.terms;
-                    if (p.refund && document.getElementById('pol-refund')) document.getElementById('pol-refund').value = p.refund;
-                    if (p.shipping && document.getElementById('pol-shipping')) document.getElementById('pol-shipping').value = p.shipping;
+                    if (p.privacy) document.getElementById('pol-privacy').value = p.privacy;
+                    if (p.terms) document.getElementById('pol-terms').value = p.terms;
+                    if (p.refund) document.getElementById('pol-refund').value = p.refund;
+                    if (p.shipping) document.getElementById('pol-shipping').value = p.shipping;
                 }
             });
         }
 
         function handleSavePolicies(e) {
-            if (e) e.preventDefault();
-            const policies = {
-                privacy: document.getElementById('pol-privacy') ? document.getElementById('pol-privacy').value.trim() : '',
-                terms: document.getElementById('pol-terms') ? document.getElementById('pol-terms').value.trim() : '',
-                refund: document.getElementById('pol-refund') ? document.getElementById('pol-refund').value.trim() : '',
-                shipping: document.getElementById('pol-shipping') ? document.getElementById('pol-shipping').value.trim() : '',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("settings").doc("policies").set(policies, { merge: true }).then(() => {
-                alert("✓ Policies Cloud me save ho gayi!");
-            }).catch(err => alert("Policies Error: " + err.message));
+            e.preventDefault();
+            db.collection("settings").doc("policies").set({
+                privacy: document.getElementById('pol-privacy').value.trim(),
+                terms: document.getElementById('pol-terms').value.trim(),
+                refund: document.getElementById('pol-refund').value.trim(),
+                shipping: document.getElementById('pol-shipping').value.trim(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).then(() => alert("✓ Policies Cloud me save ho gayi!"));
         }
 
-        // 7. SEO METADATA: FIRESTORE DIRECT
+        // 6. SEO METADATA
         function loadLiveSEO() {
             db.collection("settings").doc("seo").get().then(doc => {
                 if (doc.exists) {
-                    const seo = doc.data();
-                    if (seo.title && document.getElementById('seo-title')) document.getElementById('seo-title').value = seo.title;
-                    if (seo.keywords && document.getElementById('seo-keywords')) document.getElementById('seo-keywords').value = seo.keywords;
-                    if (seo.desc && document.getElementById('seo-desc')) document.getElementById('seo-desc').value = seo.desc;
-                    if (seo.gsc && document.getElementById('seo-gsc')) document.getElementById('seo-gsc').value = seo.gsc;
+                    const s = doc.data();
+                    if (s.title) document.getElementById('seo-title').value = s.title;
+                    if (s.keywords) document.getElementById('seo-keywords').value = s.keywords;
+                    if (s.desc) document.getElementById('seo-desc').value = s.desc;
+                    if (s.gsc) document.getElementById('seo-gsc').value = s.gsc;
                 }
             });
         }
 
         function handleSaveSEO(e) {
-            if (e) e.preventDefault();
-            const seo = {
-                title: document.getElementById('seo-title') ? document.getElementById('seo-title').value.trim() : '',
-                keywords: document.getElementById('seo-keywords') ? document.getElementById('seo-keywords').value.trim() : '',
-                desc: document.getElementById('seo-desc') ? document.getElementById('seo-desc').value.trim() : '',
-                gsc: document.getElementById('seo-gsc') ? document.getElementById('seo-gsc').value.trim() : '',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("settings").doc("seo").set(seo, { merge: true }).then(() => {
-                alert("✓ SEO Metadata Cloud me save ho gaya!");
-            }).catch(err => alert("SEO Error: " + err.message));
+            e.preventDefault();
+            db.collection("settings").doc("seo").set({
+                title: document.getElementById('seo-title').value.trim(),
+                keywords: document.getElementById('seo-keywords').value.trim(),
+                desc: document.getElementById('seo-desc').value.trim(),
+                gsc: document.getElementById('seo-gsc').value.trim(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).then(() => alert("✓ SEO Metadata Cloud me save ho gaya!"));
         }
 
-        // 8. MASTER SETTINGS: FIRESTORE DIRECT
+        // 7. FULL SETTINGS
         function loadLiveFullSettings() {
             db.collection("settings").doc("homepage").get().then(doc => {
                 if (doc.exists) {
                     const s = doc.data();
-                    if (s.logoUrl && document.getElementById('set-logo-url')) document.getElementById('set-logo-url').value = s.logoUrl;
-                    if (s.faviconUrl && document.getElementById('set-favicon-url')) document.getElementById('set-favicon-url').value = s.faviconUrl;
-                    if (s.annStatus && document.getElementById('set-ann-status')) document.getElementById('set-ann-status').value = s.annStatus;
-                    if (s.annBg && document.getElementById('set-ann-bg')) document.getElementById('set-ann-bg').value = s.annBg;
-                    if (s.annText && document.getElementById('set-ann-text')) document.getElementById('set-ann-text').value = s.annText;
-                    if (s.bannerTitle && document.getElementById('set-banner-title')) document.getElementById('set-banner-title').value = s.bannerTitle;
-                    if (s.bannerImg && document.getElementById('set-banner-img')) document.getElementById('set-banner-img').value = s.bannerImg;
-                    if (s.ytVideo && document.getElementById('set-yt-video')) document.getElementById('set-yt-video').value = s.ytVideo;
-                    if (s.ytTitle && document.getElementById('set-yt-title')) document.getElementById('set-yt-title').value = s.ytTitle;
-                    if (s.phone && document.getElementById('set-phone')) document.getElementById('set-phone').value = s.phone;
-                    if (s.email && document.getElementById('set-email')) document.getElementById('set-email').value = s.email;
-                    if (s.shipAddr && document.getElementById('set-ship-addr')) document.getElementById('set-ship-addr').value = s.shipAddr;
-                    if (s.officeAddr && document.getElementById('set-office-addr')) document.getElementById('set-office-addr').value = s.officeAddr;
-                    if (s.insta && document.getElementById('set-soc-insta')) document.getElementById('set-soc-insta').value = s.insta;
-                    if (s.fb && document.getElementById('set-soc-fb')) document.getElementById('set-soc-fb').value = s.fb;
-                    if (s.youtube && document.getElementById('set-soc-yt')) document.getElementById('set-soc-yt').value = s.youtube;
-                    if (s.pin && document.getElementById('set-soc-pin')) document.getElementById('set-soc-pin').value = s.pin;
-                    if (s.linkedin && document.getElementById('set-soc-linkedin')) document.getElementById('set-soc-linkedin').value = s.linkedin;
-                    if (s.xTwitter && document.getElementById('set-soc-x')) document.getElementById('set-soc-x').value = s.xTwitter;
-                    if (s.footerAbout && document.getElementById('set-footer-about')) document.getElementById('set-footer-about').value = s.footerAbout;
-                    if (s.footerCopy && document.getElementById('set-footer-copy')) document.getElementById('set-footer-copy').value = s.footerCopy;
+                    if (s.logoUrl) document.getElementById('set-logo-url').value = s.logoUrl;
+                    if (s.faviconUrl) document.getElementById('set-favicon-url').value = s.faviconUrl;
+                    if (s.annStatus) document.getElementById('set-ann-status').value = s.annStatus;
+                    if (s.annBg) document.getElementById('set-ann-bg').value = s.annBg;
+                    if (s.annText) document.getElementById('set-ann-text').value = s.annText;
+                    if (s.bannerTitle) document.getElementById('set-banner-title').value = s.bannerTitle;
+                    if (s.bannerImg) document.getElementById('set-banner-img').value = s.bannerImg;
+                    if (s.phone) document.getElementById('set-phone').value = s.phone;
+                    if (s.email) document.getElementById('set-email').value = s.email;
                 }
             });
         }
 
         function handleSaveFullSettings(e) {
-            if (e) e.preventDefault();
-            let ytRaw = document.getElementById('set-yt-video') ? document.getElementById('set-yt-video').value.trim() : '';
-            if (ytRaw.includes('youtu.be/')) {
-                ytRaw = ytRaw.split('youtu.be/')[1].split('?')[0];
-            } else if (ytRaw.includes('watch?v=')) {
-                ytRaw = ytRaw.split('watch?v=')[1].split('&')[0];
-            } else if (ytRaw.includes('embed/')) {
-                ytRaw = ytRaw.split('embed/')[1].split('?')[0];
-            }
-
-            const fullSettings = {
-                logoUrl: document.getElementById('set-logo-url') ? document.getElementById('set-logo-url').value.trim() : 'images/logo.png',
-                faviconUrl: document.getElementById('set-favicon-url') ? document.getElementById('set-favicon-url').value.trim() : 'images/favicon.ico',
-                annStatus: document.getElementById('set-ann-status') ? document.getElementById('set-ann-status').value : 'enabled',
-                annBg: document.getElementById('set-ann-bg') ? document.getElementById('set-ann-bg').value.trim() : '#1b5e20',
-                annText: document.getElementById('set-ann-text') ? document.getElementById('set-ann-text').value.trim() : '',
-                bannerTitle: document.getElementById('set-banner-title') ? document.getElementById('set-banner-title').value.trim() : '',
-                bannerImg: document.getElementById('set-banner-img') ? document.getElementById('set-banner-img').value.trim() : 'images/banner.jpg',
-                ytVideo: ytRaw,
-                ytTitle: document.getElementById('set-yt-title') ? document.getElementById('set-yt-title').value.trim() : '',
-                phone: document.getElementById('set-phone') ? document.getElementById('set-phone').value.trim() : '',
-                email: document.getElementById('set-email') ? document.getElementById('set-email').value.trim() : '',
-                shipAddr: document.getElementById('set-ship-addr') ? document.getElementById('set-ship-addr').value.trim() : '',
-                officeAddr: document.getElementById('set-office-addr') ? document.getElementById('set-office-addr').value.trim() : '',
-                insta: document.getElementById('set-soc-insta') ? document.getElementById('set-soc-insta').value.trim() : '',
-                fb: document.getElementById('set-soc-fb') ? document.getElementById('set-soc-fb').value.trim() : '',
-                youtube: document.getElementById('set-soc-yt') ? document.getElementById('set-soc-yt').value.trim() : '',
-                pin: document.getElementById('set-soc-pin') ? document.getElementById('set-soc-pin').value.trim() : '',
-                linkedin: document.getElementById('set-soc-linkedin') ? document.getElementById('set-soc-linkedin').value.trim() : '',
-                xTwitter: document.getElementById('set-soc-x') ? document.getElementById('set-soc-x').value.trim() : '',
-                footerAbout: document.getElementById('set-footer-about') ? document.getElementById('set-footer-about').value.trim() : '',
-                footerCopy: document.getElementById('set-footer-copy') ? document.getElementById('set-footer-copy').value.trim() : '',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            db.collection("settings").doc("homepage").set(fullSettings, { merge: true }).then(() => {
-                alert("✓ Sabhi Master Settings Cloud Firestore par save ho gayi!");
-            }).catch(err => alert("Settings Error: " + err.message));
+            e.preventDefault();
+            db.collection("settings").doc("homepage").set({
+                logoUrl: document.getElementById('set-logo-url').value.trim(),
+                faviconUrl: document.getElementById('set-favicon-url').value.trim(),
+                annStatus: document.getElementById('set-ann-status').value,
+                annBg: document.getElementById('set-ann-bg').value.trim(),
+                annText: document.getElementById('set-ann-text').value.trim(),
+                bannerTitle: document.getElementById('set-banner-title').value.trim(),
+                bannerImg: document.getElementById('set-banner-img').value.trim(),
+                phone: document.getElementById('set-phone').value.trim(),
+                email: document.getElementById('set-email').value.trim(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).then(() => alert("✓ Sabhi Settings Cloud me save ho gayi!"));
         }
 
-        // ASSET UPLOAD LOGIC
-        function uploadDirectLogo(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 300;
-                    const scale = MAX_WIDTH / img.width;
-                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
-                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    const compressedLogo = canvas.toDataURL('image/png');
-
-                    const logoInput = document.getElementById('set-logo-url');
-                    if (logoInput) logoInput.value = compressedLogo;
-                    const previewArea = document.getElementById('logo-preview-area');
-                    if (previewArea) {
-                        previewArea.innerHTML = `<img src="${compressedLogo}" style="max-height: 50px; border-radius: 6px; border: 1px solid #1b5e20; padding: 2px;">`;
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function uploadDirectFavicon(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const favData = e.target.result;
-                const favInput = document.getElementById('set-favicon-url');
-                if (favInput) favInput.value = favData;
-                const preview = document.getElementById('favicon-preview-area');
-                if (preview) {
-                    preview.innerHTML = `<img src="${favData}" style="max-height: 28px; max-width: 28px; border-radius: 4px; border: 1px solid #1b5e20; padding: 2px;">`;
+        // 8. A+ CONTENT
+        function loadProductAPlusData() {
+            const prodName = document.getElementById('aplus-product-select').value;
+            if (!prodName) return;
+            db.collection("aplus_content").doc(encodeURIComponent(prodName)).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('aplus-banner-img').value = data.bannerImg || "images/banner.jpg";
+                    document.getElementById('aplus-f1-title').value = data.f1Title || "";
+                    document.getElementById('aplus-f1-desc').value = data.f1Desc || "";
+                    document.getElementById('aplus-f2-title').value = data.f2Title || "";
+                    document.getElementById('aplus-f2-desc').value = data.f2Desc || "";
+                    document.getElementById('aplus-f3-title').value = data.f3Title || "";
+                    document.getElementById('aplus-f3-desc').value = data.f3Desc || "";
                 }
-            };
-            reader.readAsDataURL(file);
+            });
         }
-    <script>
-      function handleSaveProduct(e) {
-          if (e) e.preventDefault();
-          const editIdElem = document.getElementById('p-edit-id');
-          const editId = editIdElem ? editIdElem.value.trim() : '';
 
-          let finalGallery = [];
-          if (typeof uploadedImagesList !== 'undefined' && uploadedImagesList.length > 0) {
-              finalGallery = uploadedImagesList;
-          } else if (editId && typeof liveProducts !== 'undefined') {
-              const existing = liveProducts.find(x => x.docId === editId);
-              if (existing && existing.gallery && existing.gallery.length > 0) {
-                  finalGallery = existing.gallery;
-              }
-          }
-          if (finalGallery.length === 0) {
-              const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
-              finalGallery = [fallback || 'images/moringa.jpg'];
-          }
-
-          const prodObj = {
-              name: document.getElementById('p-name') ? document.getElementById('p-name').value.trim() : '',
-              price: document.getElementById('p-price') ? Number(document.getElementById('p-price').value.trim()) : 0,
-              mrp: document.getElementById('p-mrp') ? Number(document.getElementById('p-mrp').value.trim()) : 0,
-              badge: document.getElementById('p-badge') ? document.getElementById('p-badge').value.trim() : '',
-              weight: document.getElementById('p-weight') ? document.getElementById('p-weight').value.trim() : '',
-              stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
-              image: finalGallery[0],
-              gallery: finalGallery,
-              desc: document.getElementById('p-desc') ? document.getElementById('p-desc').value.trim() : '',
-              updatedAt: new Date().toISOString()
-          };
-
-          if (editId) {
-              db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
-                  alert("✓ Product Cloud Database me update ho gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Update Error: " + err.message));
-          } else {
-              prodObj.createdAt = new Date().toISOString();
-              db.collection("products").add(prodObj).then(() => {
-                  alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Save Error: " + err.message));
-          }
-      }
-    <script>
-      function handleSaveProduct(e) {
-          if (e) e.preventDefault();
-          const editIdElem = document.getElementById('p-edit-id');
-          const editId = editIdElem ? editIdElem.value.trim() : '';
-
-          let finalGallery = [];
-          if (typeof uploadedImagesList !== 'undefined' && uploadedImagesList.length > 0) {
-              finalGallery = uploadedImagesList;
-          } else if (editId && typeof liveProducts !== 'undefined') {
-              const existing = liveProducts.find(x => x.docId === editId);
-              if (existing && existing.gallery && existing.gallery.length > 0) {
-                  finalGallery = existing.gallery;
-              }
-          }
-          if (finalGallery.length === 0) {
-              const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
-              finalGallery = [fallback || 'images/moringa.jpg'];
-          }
-
-          const prodObj = {
-              name: document.getElementById('p-name') ? document.getElementById('p-name').value.trim() : '',
-              price: document.getElementById('p-price') ? Number(document.getElementById('p-price').value.trim()) : 0,
-              mrp: document.getElementById('p-mrp') ? Number(document.getElementById('p-mrp').value.trim()) : 0,
-              badge: document.getElementById('p-badge') ? document.getElementById('p-badge').value.trim() : '',
-              weight: document.getElementById('p-weight') ? document.getElementById('p-weight').value.trim() : '',
-              stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
-              image: finalGallery[0],
-              gallery: finalGallery,
-              desc: document.getElementById('p-desc') ? document.getElementById('p-desc').value.trim() : '',
-              updatedAt: new Date().toISOString()
-          };
-
-          if (editId) {
-              db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
-                  alert("✓ Product Cloud Database me update ho gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Update Error: " + err.message));
-          } else {
-              prodObj.createdAt = new Date().toISOString();
-              db.collection("products").add(prodObj).then(() => {
-                  alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Save Error: " + err.message));
-          }
-      }
+        function handleSaveAPlusContent(e) {
+            e.preventDefault();
+            const prodName = document.getElementById('aplus-product-select').value;
+            db.collection("aplus_content").doc(encodeURIComponent(prodName)).set({
+                bannerImg: document.getElementById('aplus-banner-img').value.trim(),
+                f1Title: document.getElementById('aplus-f1-title').value.trim(),
+                f1Desc: document.getElementById('aplus-f1-desc').value.trim(),
+                f2Title: document.getElementById('aplus-f2-title').value.trim(),
+                f2Desc: document.getElementById('aplus-f2-desc').value.trim(),
+                f3Title: document.getElementById('aplus-f3-title').value.trim(),
+                f3Desc: document.getElementById('aplus-f3-desc').value.trim(),
+                updatedAt: new Date().toISOString()
+            }, { merge: true }).then(() => alert(`✓ A+ Content Cloud me save ho gaya: ${prodName}`));
+        }
     </script>
 </body>
-    <script>
-      function handleSaveProduct(e) {
-          if (e) e.preventDefault();
-          const editIdElem = document.getElementById('p-edit-id');
-          const editId = editIdElem ? editIdElem.value.trim() : '';
-
-          let finalGallery = [];
-          if (typeof uploadedImagesList !== 'undefined' && uploadedImagesList.length > 0) {
-              finalGallery = uploadedImagesList;
-          } else if (editId && typeof liveProducts !== 'undefined') {
-              const existing = liveProducts.find(x => x.docId === editId);
-              if (existing && existing.gallery && existing.gallery.length > 0) {
-                  finalGallery = existing.gallery;
-              }
-          }
-          if (finalGallery.length === 0) {
-              const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
-              finalGallery = [fallback || 'images/moringa.jpg'];
-          }
-
-          const prodObj = {
-              name: document.getElementById('p-name') ? document.getElementById('p-name').value.trim() : '',
-              price: document.getElementById('p-price') ? Number(document.getElementById('p-price').value.trim()) : 0,
-              mrp: document.getElementById('p-mrp') ? Number(document.getElementById('p-mrp').value.trim()) : 0,
-              badge: document.getElementById('p-badge') ? document.getElementById('p-badge').value.trim() : '',
-              weight: document.getElementById('p-weight') ? document.getElementById('p-weight').value.trim() : '',
-              stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
-              image: finalGallery[0],
-              gallery: finalGallery,
-              desc: document.getElementById('p-desc') ? document.getElementById('p-desc').value.trim() : '',
-              updatedAt: new Date().toISOString()
-          };
-
-          if (editId) {
-              db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
-                  alert("✓ Product Cloud Database me update ho gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Update Error: " + err.message));
-          } else {
-              prodObj.createdAt = new Date().toISOString();
-              db.collection("products").add(prodObj).then(() => {
-                  alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Save Error: " + err.message));
-          }
-      }
-    </script>
-</body>
-    <script>
-      function handleSaveProduct(e) {
-          if (e) e.preventDefault();
-          const editIdElem = document.getElementById('p-edit-id');
-          const editId = editIdElem ? editIdElem.value.trim() : '';
-
-          let finalGallery = [];
-          if (typeof uploadedImagesList !== 'undefined' && uploadedImagesList.length > 0) {
-              finalGallery = uploadedImagesList;
-          } else if (editId && typeof liveProducts !== 'undefined') {
-              const existing = liveProducts.find(x => x.docId === editId);
-              if (existing && existing.gallery && existing.gallery.length > 0) {
-                  finalGallery = existing.gallery;
-              }
-          }
-          if (finalGallery.length === 0) {
-              const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
-              finalGallery = [fallback || 'images/moringa.jpg'];
-          }
-
-          const prodObj = {
-              name: document.getElementById('p-name') ? document.getElementById('p-name').value.trim() : '',
-              price: document.getElementById('p-price') ? Number(document.getElementById('p-price').value.trim()) : 0,
-              mrp: document.getElementById('p-mrp') ? Number(document.getElementById('p-mrp').value.trim()) : 0,
-              badge: document.getElementById('p-badge') ? document.getElementById('p-badge').value.trim() : '',
-              weight: document.getElementById('p-weight') ? document.getElementById('p-weight').value.trim() : '',
-              stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
-              image: finalGallery[0],
-              gallery: finalGallery,
-              desc: document.getElementById('p-desc') ? document.getElementById('p-desc').value.trim() : '',
-              updatedAt: new Date().toISOString()
-          };
-
-          if (editId) {
-              db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
-                  alert("✓ Product Cloud Database me update ho gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Update Error: " + err.message));
-          } else {
-              prodObj.createdAt = new Date().toISOString();
-              db.collection("products").add(prodObj).then(() => {
-                  alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
-                  if (typeof resetProductForm === 'function') resetProductForm();
-              }).catch(err => alert("Save Error: " + err.message));
-          }
-      }
-    </script>
-</body>
-</html>
-</html>
 </html>
