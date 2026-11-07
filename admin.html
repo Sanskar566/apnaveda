@@ -290,7 +290,7 @@
                             </div>
                         </div>
                         <div>
-                            <label>Upload Photos (Ctrl दबाकर 1 से 9 तस्वीरें चुनें)</label>
+                            <label>Upload Photos (Ctrl दबाकर 1 से 9 HD तस्वीरें चुनें)</label>
                             <input type="file" id="p-file-input" accept="image/*" multiple onchange="handleNineImagesUpload(event)" style="margin-bottom: 6px;">
                             <input type="text" id="p-image" placeholder="images/moringa.jpg" value="images/moringa.jpg">
                         </div>
@@ -867,7 +867,7 @@
             });
         }
 
-        // 9 Images Compress and Upload Engine
+        // HD Quality (750px / 0.72) 9-Image Engine
         function handleNineImagesUpload(event) {
             const files = event.target.files;
             if (!files || files.length === 0) return;
@@ -883,22 +883,25 @@
                     img.src = e.target.result;
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400;
-                        const scale = Math.min(1, MAX_WIDTH / img.width);
-                        canvas.width = img.width * scale;
-                        canvas.height = img.height * scale;
+                        // 750px HD width & 0.72 quality ensures crystal clear text & details
+                        const MAX_WIDTH = 750;
+                        const scaleSize = Math.min(1, MAX_WIDTH / img.width);
+                        canvas.width = img.width * scaleSize;
+                        canvas.height = img.height * scaleSize;
 
                         const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        const compressed = canvas.toDataURL('image/jpeg', 0.45);
+                        const compressed = canvas.toDataURL('image/jpeg', 0.72);
                         uploadedNineImages.push(compressed);
 
                         if (previewContainer) {
                             previewContainer.innerHTML += `
-                                <div style="position:relative; width: 60px; height: 60px; border-radius: 6px; overflow: hidden; border: 1px solid #1b5e20;">
+                                <div style="position:relative; width: 68px; height: 68px; border-radius: 6px; overflow: hidden; border: 1px solid #1b5e20; box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
                                     <img src="${compressed}" style="width: 100%; height: 100%; object-fit: cover;">
-                                    <span style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.65); color: #fff; font-size: 9px; text-align: center;">#${uploadedNineImages.length}</span>
+                                    <span style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.65); color: #fff; font-size: 9px; text-align: center;">#${uploadedNineImages.length} HD</span>
                                 </div>
                             `;
                         }
@@ -948,7 +951,7 @@
             } else {
                 prodObj.createdAt = new Date().toISOString();
                 db.collection("products").add(prodObj).then(() => {
-                    alert(`✓ Naya product ${finalGallery.length} tasveeron ke sath jud gaya!`);
+                    alert(`✓ Naya product ${finalGallery.length} HD tasveeron ke sath jud gaya!`);
                     resetProductForm();
                 }).catch(err => alert("Save Error: " + err.message));
             }
