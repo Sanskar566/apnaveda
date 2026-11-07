@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - apnaVeda™</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f8fafc; color: #1e293b; padding-bottom: 60px; }
+        header { background: #1b5e20; color: #fff; padding: 18px 24px; text-align: center; }
+        header a { color: #fff; text-decoration: none; font-weight: 700; font-size: 20px; }
+        .container { max-width: 900px; margin: 40px auto; padding: 30px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #1b5e20; font-size: 26px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; }
+        #policy-display { white-space: pre-wrap; line-height: 1.8; font-size: 15px; color: #334155; }
+        .back-btn { display: inline-block; margin-top: 30px; color: #1b5e20; text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html">🌿 apnaVeda™</a>
+    </header>
+
+    <div class="container">
+        <h1>Terms & Conditions</h1>
+        <div id="policy-display">Loading terms...</div>
+        <a href="index.html" class="back-btn">← Back to Store</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const policies = JSON.parse(localStorage.getItem('apnaVeda_policies') || '{}');
+            const displayBox = document.getElementById('policy-display');
+            
+            if (policies.terms && policies.terms.trim() !== "") {
+                displayBox.innerText = policies.terms;
+            } else {
+                displayBox.innerText = "Terms and conditions for apnaVeda™ orders, user accounts, and platform usage will display here.";
+            }
+        });
+    </script>
+</body>
+</html>

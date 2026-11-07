@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Access & Registration | apnaVeda™</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .auth-wrapper {
+            max-width: 440px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+        .brand-logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 20px;
+        }
+        /* टैब्स: Sign In vs Sign Up */
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 25px;
+        }
+        .auth-tab-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            color: #777;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .auth-tab-btn.active {
+            color: #1b5e20;
+            border-bottom-color: #2e7d32;
+        }
+        
+        .form-section { display: none; }
+        .form-section.active { display: block; }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #2e7d32;
+        }
+        
+        .btn-auth {
+            width: 100%;
+            background: #ffd814;
+            background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+            color: #111;
+            border: 1px solid #a88734;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        .btn-auth:hover {
+            background: #f7ca00;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+        }
+        .back-link a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .admin-note {
+            background: #e8f5e9;
+            border: 1px dashed #2e7d32;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: #1b5e20;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-wrapper">
+        <div class="brand-logo">🌿 apnaVeda™</div>
+
+        <!-- टैब्स स्विच करने के लिए -->
+        <div class="auth-tabs">
+            <button class="auth-tab-btn active" onclick="switchAuthTab('signin-sec', this)">Sign In</button>
+            <button class="auth-tab-btn" onclick="switchAuthTab('signup-sec', this)">Create Account</button>
+        </div>
+
+        <!-- 1. SIGN IN FORM -->
+        <div id="signin-sec" class="form-section active">
+            <form onsubmit="handleCustomerLogin(event)" autocomplete="off">
+                <div class="form-group">
+                    <label>Registered Mobile Number or Email</label>
+                    <input type="text" id="login-id" placeholder="Enter your 10-digit mobile" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-pass" placeholder="Enter your password" required autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="btn-auth">Sign In</button>
+            </form>
+        </div>
+
+        <!-- 2. CREATE ACCOUNT (SIGN UP) FORM -->
+        <div id="signup-sec" class="form-section">
+            <form onsubmit="handleCustomerRegister(event)" autocomplete="off">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="reg-name" placeholder="Enter full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>10-Digit Mobile Number *</label>
+                    <input type="tel" id="reg-phone" placeholder="e.g. 6386862362" pattern="[0-9]{10}" maxlength="10" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address (Optional)</label>
+                    <input type="email" id="reg-email" placeholder="name@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Create Secure Password *</label>
+                    <input type="password" id="reg-pass" placeholder="Create a password" required minlength="4">
+                </div>
+
+                <button type="submit" class="btn-auth">Create My Account</button>
+            </form>
+        </div>
+
+        <div class="admin-note">
+            🔒 Admin Access: User: <code>admin</code> | Pass: <code>apnaveda123</code> in Sign In tab
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← Return to Store</a>
+        </div>
+    </div>
+
+    <script>
+        // टैब बदलने का लॉजिक
+        function switchAuthTab(sectionId, btn) {
+            document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.auth-tab-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // 1. नया कस्टमर अकाउंट रजिस्टर करना
+        function handleCustomerRegister(e) {
+            e.preventDefault();
+
+            const name = document.getElementById("reg-name").value.trim();
+            const phone = document.getElementById("reg-phone").value.trim();
+            const email = document.getElementById("reg-email").value.trim();
+            const pass = document.getElementById("reg-pass").value.trim();
+
+            if (phone.length !== 10 || isNaN(phone)) {
+                alert("Please enter a valid 10-digit mobile number!");
+                return;
+            }
+
+            // पहले से सेव कस्टमर्स की लिस्ट
+            let customers = JSON.parse(localStorage.getItem("apnaVeda_registered_customers") || "[]");
+
+            // चेक करें कि यह मोबाइल नंबर पहले से मौजूद तो नहीं है
+            const existingUser = customers.find(c => c.phone === phone);
+            if (existingUser) {
+                alert("An account already exists with this mobile number! Please Sign In.");
+                switchAuthTab('signin-sec', document.querySelectorAll('.auth-tab-btn')[0]);
+                document.getElementById("login-id").value = phone;
+                return;
+            }
+
+            // नया कस्टमर जोड़ें
+            const newCustomer = { name, phone, email, pass, date: new Date().toLocaleDateString() };
+            customers.push(newCustomer);
+            localStorage.setItem("apnaVeda_registered_customers", JSON.stringify(customers));
+
+            // अपने आप लॉगिन सेशन में सेट करके अकाउंट पेज पर भेजें
+            sessionStorage.removeItem("apnaVeda_admin_logged");
+            sessionStorage.setItem("apnaVeda_customer_phone", phone);
+            sessionStorage.setItem("apnaVeda_customer_name", name);
+
+            alert("🎉 Account created successfully! Welcome to apnaVeda™, " + name);
+            window.location.href = "account.html";
+        }
+
+        // 2. लॉगिन करना (कस्टमर या एडमिन)
+        function handleCustomerLogin(e) {
+            e.preventDefault();
+
+            const id = document.getElementById("login-id").value.trim();
+            const pass = document.getElementById("login-pass").value.trim();
+
+            // A. एडमिन लॉगिन चेक
+            if (id.toLowerCase() === "admin" && pass === "apnaveda123") {
+                sessionStorage.setItem("apnaVeda_admin_logged", "true");
+                alert("✓ Admin Authorized! Opening Staff Management Dashboard...");
+                window.location.href = "admin.html";
+                return;
+            }
+
+            // B. कस्टमर लॉगिन चेक
+            const customers = JSON.parse(localStorage.getItem("apnaVeda_registered_customers") || "[]");
+            const customer = customers.find(c => (c.phone === id || (c.email && c.email.toLowerCase() === id.toLowerCase())) && c.pass === pass);
+
+            if (customer) {
+                sessionStorage.removeItem("apnaVeda_admin_logged");
+                sessionStorage.setItem("apnaVeda_customer_phone", customer.phone);
+                sessionStorage.setItem("apnaVeda_customer_name", customer.name);
+
+                alert("✓ Welcome back, " + customer.name + "! Redirecting to your Orders Dashboard...");
+                window.location.href = "account.html";
+            } else {
+                alert("✕ Invalid Mobile Number or Password!\n\nIf you are a new customer, please click on 'Create Account' tab first.");
+            }
+        }
+    </script>
+</body>
+</html>

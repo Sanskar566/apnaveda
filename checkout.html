@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | apnaVeda™</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .checkout-wrapper {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 768px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checkout-box {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .checkout-box h2 {
+            font-size: 18px;
+            color: #1b5e20;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #2e7d32;
+        }
+        /* Order Summary Table */
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #555;
+        }
+        .order-summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: bold;
+            color: #1b5e20;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .payment-option {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .payment-option input[type="radio"] {
+            accent-color: #2e7d32;
+        }
+        .place-order-btn {
+            width: 100%;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s ease;
+        }
+        .place-order-btn:hover {
+            background: #1b5e20;
+        }
+        /* Success Screen */
+        #order-success {
+            display: none;
+            max-width: 500px;
+            margin: 60px auto;
+            text-align: center;
+            background: white;
+            padding: 40px 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body style="background: #f8faf8; margin: 0; font-family: Arial, sans-serif;">
+
+    <header class="navbar" style="background: #1b5e20; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="logo" style="color: white; font-weight: bold; font-size: 20px;">🌿 apnaVeda™</div>
+        <a href="index.html" style="color: #e8f5e9; text-decoration: none; font-size: 14px;">← Back to Store</a>
+    </header>
+
+    <!-- 1. मुख्य चेकआउट फॉर्म और समरी -->
+    <main class="checkout-wrapper" id="checkout-main">
+        
+        <!-- बायां हिस्सा: शिपिंग डिटेल्स -->
+        <section class="checkout-box">
+            <h2>Shipping & Contact Details</h2>
+            <form id="shipping-form" onsubmit="submitOrder(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="cust-name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" id="cust-phone" maxlength="10" required placeholder="10-digit mobile number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="cust-email" required placeholder="name@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Complete Delivery Address (House No, Street, Landmark) *</label>
+                    <textarea id="cust-address" rows="3" required placeholder="Full shipping address"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City / District *</label>
+                        <input type="text" id="cust-city" required placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="cust-state" required placeholder="State">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pincode *</label>
+                    <input type="text" id="cust-pincode" maxlength="6" required placeholder="6-digit Pincode">
+                </div>
+
+                <h2>Select Payment Method</h2>
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+    <input type="radio" name="paymentMethod" value="Online" checked> 
+    💳 UPI / Debit Card / Net Banking (Instant Payment)
+</label>
+
+                <button type="submit" class="place-order-btn">Confirm & Place Order</button>
+            </form>
+        </section>
+
+        <!-- दायां हिस्सा: ऑर्डर समरी -->
+        <section class="checkout-box" style="height: fit-content;">
+            <h2>Order Summary</h2>
+            <div id="checkout-items-list">
+                <!-- कार्ट के आइटम यहाँ लोड होंगे -->
+            </div>
+            
+            <div class="order-summary-item" style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                <span>Delivery Charges</span>
+                <span style="color: #2e7d32; font-weight: bold;">FREE</span>
+            </div>
+
+            <div class="order-summary-total">
+                <span>Grand Total</span>
+                <span id="checkout-total-price">₹0</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 2. ऑर्डर कम्प्लीट होने पर दिखने वाला सक्सेस बॉक्स -->
+    <div id="order-success">
+        <h2 style="color: #2e7d32; font-size: 24px; margin-bottom: 10px;">✓ Order Placed Successfully!</h2>
+        <p style="color: #555; font-size: 14px; line-height: 1.6;">
+            Thank you for ordering with <strong>apnaVeda™</strong>.<br>
+            Your Order ID is: <strong id="display-order-id" style="color: #1b5e20;"></strong>
+        </p>
+        <p style="font-size: 13px; color: #777;">
+            We will contact you via WhatsApp/SMS before dispatching your package.
+        </p>
+        <a href="index.html" class="place-order-btn" style="display: inline-block; text-decoration: none; margin-top: 15px; width: auto; padding: 10px 25px;">Continue Shopping</a>
+    </div>
+
+    <script>
+        // कार्ट से डेटा लोड करना
+        let cartData = JSON.parse(localStorage.getItem('cart') || '[]');
+        const itemsList = document.getElementById('checkout-items-list');
+        const totalPriceEl = document.getElementById('checkout-total-price');
+
+        function renderCheckoutSummary() {
+            if (cartData.length === 0) {
+                itemsList.innerHTML = '<p style="color: #888;">Your cart is empty.</p>';
+                totalPriceEl.innerText = '₹0';
+                return;
+            }
+
+            let subtotal = 0;
+            itemsList.innerHTML = '';
+
+            cartData.forEach(item => {
+                const itemTotal = item.price * (item.quantity || 1);
+                subtotal += itemTotal;
+                itemsList.innerHTML += `
+                    <div class="order-summary-item">
+                        <span>${item.name} × ${item.quantity || 1}</span>
+                        <span>₹${itemTotal}</span>
+                    </div>
+                `;
+            });
+
+            totalPriceEl.innerText = '₹' + subtotal;
+        }
+
+        renderCheckoutSummary();
+
+        // ऑर्डर सबमिट हैंडलर
+        function submitOrder(e) {
+            e.preventDefault();
+
+            if (cartData.length === 0) {
+                alert("Your cart is empty. Please add products to cart first.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            const orderId = "AV-" + Math.floor(100000 + Math.random() * 900000);
+            const orderInfo = {
+                orderId: orderId,
+                name: document.getElementById('cust-name').value.trim(),
+                phone: document.getElementById('cust-phone').value.trim(),
+                email: document.getElementById('cust-email').value.trim(),
+                address: document.getElementById('cust-address').value.trim(),
+                city: document.getElementById('cust-city').value.trim(),
+                state: document.getElementById('cust-state').value.trim(),
+                pincode: document.getElementById('cust-pincode').value.trim(),
+                paymentMethod: document.querySelector('input[name="payment-method"]:checked').value,
+                items: cartData,
+                orderDate: new Date().toLocaleDateString()
+            };
+
+            // एडमिन पैनल के लिए ऑर्डर सेव करना
+            let existingOrders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
+            existingOrders.push(orderInfo);
+            localStorage.setItem('apnaVeda_orders', JSON.stringify(existingOrders));
+
+            // कार्ट खाली करना
+            localStorage.removeItem('cart');
+
+            // स्क्रीन अपडेट
+            document.getElementById('checkout-main').style.display = 'none';
+            document.getElementById('display-order-id').innerText = orderId;
+            document.getElementById('order-success').style.display = 'block';
+        }
+    </script>
+    <!-- script.js ko link karein taaki affiliate logic mil sake -->
+<script src="script.js"></script>
+
+<script>
+// Auto-intercept submitOrder to trigger 3% Affiliate Commission
+(function() {
+    const originalSubmit = window.submitOrder;
+
+    window.submitOrder = function(event) {
+        // Pehle purana order placement chalne dein
+        if (typeof originalSubmit === 'function') {
+            originalSubmit(event);
+        }
+
+        // Uske turant baad 3% Affiliate Commission trigger karein
+        try {
+            // Cart ya total amount nikalne ka logic
+            let orderAmt = 0;
+            const totalBox = document.getElementById('final-total') || 
+                             document.getElementById('grand-total') || 
+                             document.querySelector('.total-amount');
+
+            if (totalBox) {
+                orderAmt = parseFloat(totalBox.innerText.replace(/[^0-9.]/g, '')) || 0;
+            }
+
+            if (orderAmt === 0) {
+                const cart = JSON.parse(localStorage.getItem('apnaVeda_cart') || '[]');
+                orderAmt = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
+            }
+
+            if (typeof creditAffiliateCommission === 'function' && orderAmt > 0) {
+                creditAffiliateCommission(orderAmt);
+            }
+        } catch(err) {
+            console.error("Affiliate Credit Error:", err);
+        }
+    };
+})();
+</script>
+</body>
+
+</html>
