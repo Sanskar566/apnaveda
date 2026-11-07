@@ -152,6 +152,11 @@
             gap: 6px;
         }
     </style>
+
+    <!-- Firebase SDKs Loaded First -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -232,7 +237,7 @@
                     <h3 id="product-form-title">➕ Add New Product / Edit Superfood</h3>
                 </div>
                 <form id="product-form" onsubmit="handleSaveProduct(event)">
-                    <input type="hidden" id="p-edit-index" value="-1">
+                    <input type="hidden" id="p-edit-id" value="">
                     <div class="form-grid-3">
                         <div>
                             <label>Product Title</label>
@@ -253,20 +258,20 @@
                             <input type="text" id="p-badge" placeholder="Best Seller or 40% OFF">
                         </div>
                         <div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
-            <label>Pack Size / Weight</label>
-            <input type="text" id="p-weight" placeholder="100g Pouch" required style="margin-bottom: 0;">
-        </div>
-        <div>
-            <label>Stock Status</label>
-            <select id="p-stock" style="margin-bottom: 0;">
-                <option value="in_stock">🟢 In Stock</option>
-                <option value="out_of_stock">🔴 Out of Stock</option>
-            </select>
-        </div>
-    </div>
-</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label>Pack Size / Weight</label>
+                                    <input type="text" id="p-weight" placeholder="100g Pouch" required style="margin-bottom: 0;">
+                                </div>
+                                <div>
+                                    <label>Stock Status</label>
+                                    <select id="p-stock" style="margin-bottom: 0;">
+                                        <option value="in_stock">🟢 In Stock</option>
+                                        <option value="out_of_stock">🔴 Out of Stock</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div>
                             <label>Upload Photos (Ctrl दबाकर तस्वीरें चुनें)</label>
                             <input type="file" id="p-file-input" accept="image/*" multiple onchange="handleMultipleImageUpload(event)" style="margin-bottom: 6px;">
@@ -279,7 +284,7 @@
                         <textarea id="p-desc" rows="2" placeholder="Packed with 300+ vital nutrients, pure shade-dried leaves micro-pulverized."></textarea>
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button type="submit" id="p-save-btn" class="btn btn-green">Save Product to Store</button>
+                        <button type="submit" id="p-save-btn" class="btn btn-green">Save Product to Cloud Store</button>
                         <button type="button" id="p-cancel-btn" onclick="resetProductForm()" class="btn" style="background:#e0e0e0; display:none;">Cancel Edit</button>
                     </div>
                 </form>
@@ -287,7 +292,7 @@
             
             <div class="admin-section">
                 <div class="section-header">
-                    <h3>🏷️ Active Store Products</h3>
+                    <h3>🏷️ Active Store Products (Live from Cloud Firestore)</h3>
                 </div>
                 <div class="table-responsive">
                     <table>
@@ -339,7 +344,7 @@
                     <div class="form-grid-2">
                         <div>
                             <label>Review Date</label>
-                            <input type="text" id="rev-date-input" value="06 Nov 2026" required>
+                            <input type="text" id="rev-date-input" value="07 Nov 2026" required>
                         </div>
                         <div>
                             <label>Verified Buyer Status</label>
@@ -353,7 +358,7 @@
                         <label>Customer Review Message / Feedback</label>
                         <textarea id="rev-comment-input" rows="3" placeholder="100% pure organic moringa. Bahut achhi packaging hai." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-green">➕ Upload Review to Product</button>
+                    <button type="submit" class="btn btn-green">➕ Upload Review to Cloud</button>
                 </form>
             </div>
 
@@ -436,7 +441,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-green">💾 Save A+ Content to Product Page</button>
+                    <button type="submit" class="btn btn-green">💾 Save A+ Content to Cloud</button>
                 </form>
             </div>
         </div>
@@ -472,7 +477,7 @@
                         <label>Full Blog Content</label>
                         <textarea id="b-content" rows="6" placeholder="Write full article here..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-green">🚀 Publish Blog Post</button>
+                    <button type="submit" class="btn btn-green">🚀 Publish Blog to Cloud</button>
                 </form>
             </div>
             <div class="admin-section">
@@ -529,7 +534,7 @@
                             <div id="lab-upload-status" style="font-size: 11px; margin-top: 4px;"></div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-green" onclick="saveDirectLabReport()">➕ Add Lab Certificate</button>
+                    <button type="button" class="btn btn-green" onclick="saveDirectLabReport()">➕ Add Lab Certificate to Cloud</button>
                 </form>
             </div>
             <div class="admin-section">
@@ -561,7 +566,7 @@
                 <div class="section-header">
                     <div>
                         <h3>📜 Legal & Policy Content Editor</h3>
-                        <small style="color:var(--text-muted);">यहाँ किया गया बदलाव तुरंत वेबसाइट के पॉलिसी पेजों पर लाइव अपडेट होगा।</small>
+                        <small style="color:var(--text-muted);">यहाँ किया गया बदलाव सीधे Cloud Firestore पर सेव होगा।</small>
                     </div>
                 </div>
                 <form id="policy-form" onsubmit="handleSavePolicies(event)">
@@ -581,7 +586,7 @@
                         <div class="sub-box-title">🚚 Shipping & Delivery Policy</div>
                         <textarea id="pol-shipping" rows="4"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-green" style="padding:12px 24px;">💾 Save All Policies</button>
+                    <button type="submit" class="btn btn-green" style="padding:12px 24px;">💾 Save All Policies to Cloud</button>
                 </form>
             </div>
         </div>
@@ -848,8 +853,13 @@
 
     </div>
 
-    <!-- JAVASCRIPT MASTER ENGINE -->
+    <!-- EXTERNAL CONTROLLER SCRIPT -->
+    <script src="admin.js"></script>
+
+    <!-- INLINE FIRESTORE PRODUCTS & INTERFACE LOGIC -->
     <script>
+        let liveProducts = [];
+
         function switchSection(paneId, btn) {
             document.querySelectorAll('.admin-pane').forEach(p => p.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -860,85 +870,84 @@
             if (paneId === 'tab-reviews' || paneId === 'tab-aplus') {
                 updateProductDropdowns();
             }
-
-            if (paneId === 'tab-affiliates') {
+            if (paneId === 'tab-affiliates' && typeof renderAdminAffiliates === 'function') {
                 renderAdminAffiliates();
             }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            ensureDefaultProductsExist();
-            refreshMasterAdmin();
-            updateProductDropdowns();
+            listenToLiveProducts();
+            listenToLiveReviews();
+            listenToLiveBlogs();
+            listenToLiveLabReports();
+            loadLivePolicies();
+            loadLiveSEO();
+            loadLiveFullSettings();
         });
 
-        function refreshMasterAdmin() {
-            renderCounters();
-            renderOrders();
-            renderProducts();
-            updateProductDropdowns();
-            renderReviewsTable();
-            loadProductAPlusData();
-            renderBlogs();
-            renderLabReports();
-            renderPolicies();
-            renderCustomers();
-            renderCashback();
-            renderSEO();
-            renderFullSettings();
-            renderAdminAffiliates();
-        }
+        // 1. PRODUCTS: REAL-TIME FIRESTORE SYNC
+        function listenToLiveProducts() {
+            db.collection("products").onSnapshot((snapshot) => {
+                liveProducts = [];
+                snapshot.forEach((doc) => {
+                    let data = doc.data();
+                    data.docId = doc.id;
+                    liveProducts.push(data);
+                });
 
-        function updateProductDropdowns() {
-            const products = JSON.parse(localStorage.getItem('apnaVeda_products') || '[]');
-            const reviewSelect = document.getElementById('rev-product-select');
-            const aplusSelect = document.getElementById('aplus-product-select');
-
-            if (!products || products.length === 0) return;
-
-            let optionsHtml = '';
-            products.forEach(p => {
-                if (p.name && p.name.trim()) {
-                    optionsHtml += `<option value="${p.name.trim()}">${p.name.trim()}</option>`;
+                if (liveProducts.length === 0) {
+                    seedDefaultProductsToFirestore();
+                } else {
+                    renderProductsTable(liveProducts);
+                    updateProductDropdowns();
                 }
+            }, (error) => {
+                console.error("Products Firestore Error: ", error);
             });
-
-            if (reviewSelect) reviewSelect.innerHTML = optionsHtml;
-            if (aplusSelect) aplusSelect.innerHTML = optionsHtml;
         }
 
-        function renderCounters() {
-            const orders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
-            const statOrders = document.getElementById('stat-orders');
-            if (statOrders) statOrders.innerText = orders.length;
+        function seedDefaultProductsToFirestore() {
+            const defaults = [
+                { name: "Organic Moringa Leaf Powder", price: 149, mrp: 199, badge: "Best Seller", weight: "100g Stand-up Zipper Pouch", stock: "in_stock", image: "images/moringa.jpg", gallery: ["images/moringa.jpg"], desc: "Packed with 300+ vital nutrients, pure shade-dried drumstick leaves micro-pulverized." },
+                { name: "Premium Fox Nuts (Makhana)", price: 280, mrp: 350, badge: "Farm Fresh", weight: "250g Pouch", stock: "in_stock", image: "images/makhana.jpg", gallery: ["images/makhana.jpg"], desc: "Handpicked jumbo size, crunchy, high-calcium and gluten-free healthy snack." }
+            ];
 
-            let rev = 0;
-            orders.forEach(o => {
-                if (o.status !== 'Cancelled') {
-                    (o.items || []).forEach(it => { rev += (Number(it.price) || 0) * (Number(it.quantity) || 1); });
-                }
+            const batch = db.batch();
+            defaults.forEach(p => {
+                const docRef = db.collection("products").doc();
+                batch.set(docRef, { ...p, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
             });
-            const statRev = document.getElementById('stat-revenue');
-            if (statRev) statRev.innerText = "₹" + rev.toLocaleString('en-IN');
-
-            const users = JSON.parse(localStorage.getItem('apnaVeda_registered_customers') || '[]');
-            const statUsers = document.getElementById('stat-users');
-            if (statUsers) statUsers.innerText = users.length;
-
-            const claims = JSON.parse(localStorage.getItem('apnaVeda_cashbacks') || '[]');
-            const statClaims = document.getElementById('stat-cashbacks');
-            if (statClaims) statClaims.innerText = claims.length;
+            batch.commit();
         }
 
-        function ensureDefaultProductsExist() {
-            let products = JSON.parse(localStorage.getItem('apnaVeda_products'));
-            if (!products || products.length === 0) {
-                products = [
-                    { id: "PRD101", name: "Moringa Leaf Powder", price: 149, mrp: 199, badge: "Best Seller", weight: "100g Stand-up Zipper Pouch", image: "images/moringa.jpg", gallery: ["images/moringa.jpg"], desc: "Packed with 300+ vital nutrients, pure shade-dried drumstick leaves micro-pulverized." },
-                    { id: "PRD102", name: "Premium Fox Nuts (Makhana)", price: 280, mrp: 350, badge: "Farm Fresh", weight: "250g Pouch", image: "images/makhana.jpg", gallery: ["images/makhana.jpg"], desc: "Handpicked jumbo size, crunchy, high-calcium and gluten-free healthy snack." }
-                ];
-                localStorage.setItem('apnaVeda_products', JSON.stringify(products));
+        function renderProductsTable(products) {
+            const tbody = document.getElementById('products-tbody');
+            if (!tbody) return;
+            if (products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888;">No products found in Firestore.</td></tr>`;
+                return;
             }
+            tbody.innerHTML = '';
+            products.forEach((p, idx) => {
+                const docId = p.docId;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><img src="${p.image || 'images/moringa.jpg'}" alt="" style="width:40px; height:40px; object-fit:cover; border-radius:4px; border:1px solid #ddd;"></td>
+                        <td><strong>${p.name}</strong><br><small style="color:#666;">${p.desc || ''}</small></td>
+                        <td><strong style="color:var(--primary);">₹${p.price}</strong></td>
+                        <td><del style="color:#888;">₹${p.mrp || ''}</del></td>
+                        <td><span style="background:#e8f5e9; color:#1b5e20; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;">${p.badge || 'None'}</span></td>
+                        <td>${p.weight || 'Standard'}</td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                <button onclick="editProduct('${docId}')" class="btn btn-blue" style="padding:4px 8px; font-size:11px;">Edit</button>
+                                <button onclick="deleteProduct('${docId}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
         }
 
         let uploadedImagesList = [];
@@ -957,15 +966,15 @@
                     img.src = e.target.result;
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600;
-                        const scaleSize = MAX_WIDTH / img.width;
-                        canvas.width = MAX_WIDTH;
+                        const MAX_WIDTH = 500;
+                        const scaleSize = Math.min(1, MAX_WIDTH / img.width);
+                        canvas.width = img.width * scaleSize;
                         canvas.height = img.height * scaleSize;
 
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
                         uploadedImagesList.push(compressedBase64);
 
                         if (previewContainer) {
@@ -982,53 +991,25 @@
             });
         }
 
-        function renderProducts() {
-            const tbody = document.getElementById('products-tbody');
-            if (!tbody) return;
-            const products = JSON.parse(localStorage.getItem('apnaVeda_products') || '[]');
-            if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:20px; color:#888;">No products found in store.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            products.forEach((p, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td><img src="${p.image}" alt="" style="width:40px; height:40px; object-fit:cover; border-radius:4px; border:1px solid #ddd;"></td>
-                        <td><strong>${p.name}</strong><br><small style="color:#666;">${p.desc || ''}</small></td>
-                        <td><strong style="color:var(--primary);">₹${p.price}</strong></td>
-                        <td><del style="color:#888;">₹${p.mrp}</del></td>
-                        <td><span style="background:#e8f5e9; color:#1b5e20; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:bold;">${p.badge || 'None'}</span></td>
-                        <td>${p.weight || 'Standard'}</td>
-                        <td>
-                            <div style="display:flex; gap:6px;">
-                                <button onclick="editProduct(${idx})" class="btn btn-blue" style="padding:4px 8px; font-size:11px;">Edit</button>
-                                <button onclick="deleteProduct(${idx})" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
         function handleSaveProduct(e) {
             e.preventDefault();
-            const editIndex = parseInt(document.getElementById('p-edit-index').value);
-            let products = JSON.parse(localStorage.getItem('apnaVeda_products') || '[]');
+            const editId = document.getElementById('p-edit-id').value.trim();
 
             let finalGallery = [];
             if (uploadedImagesList.length > 0) {
                 finalGallery = uploadedImagesList;
-            } else if (editIndex >= 0 && products[editIndex].gallery && products[editIndex].gallery.length > 0) {
-                finalGallery = products[editIndex].gallery;
-            } else {
+            } else if (editId) {
+                const existing = liveProducts.find(x => x.docId === editId);
+                if (existing && existing.gallery && existing.gallery.length > 0) {
+                    finalGallery = existing.gallery;
+                }
+            }
+            if (finalGallery.length === 0) {
                 const fallback = document.getElementById('p-image') ? document.getElementById('p-image').value.trim() : 'images/moringa.jpg';
                 finalGallery = [fallback || 'images/moringa.jpg'];
             }
 
             const prodObj = {
-                id: editIndex >= 0 ? products[editIndex].id : ("PRD" + Date.now()),
                 name: document.getElementById('p-name').value.trim(),
                 price: Number(document.getElementById('p-price').value.trim()),
                 mrp: Number(document.getElementById('p-mrp').value.trim()),
@@ -1037,56 +1018,48 @@
                 stock: document.getElementById('p-stock') ? document.getElementById('p-stock').value : 'in_stock',
                 image: finalGallery[0],
                 gallery: finalGallery,
-                desc: document.getElementById('p-desc').value.trim()
+                desc: document.getElementById('p-desc').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            if (editIndex >= 0) {
-                products[editIndex] = prodObj;
-                alert("✓ Product updated successfully!");
+            if (editId) {
+                db.collection("products").doc(editId).set(prodObj, { merge: true }).then(() => {
+                    alert("✓ Product Cloud Database me update ho gaya!");
+                    resetProductForm();
+                }).catch(err => alert("Update Error: " + err.message));
             } else {
-                products.push(prodObj);
-                alert("✓ New product added successfully!");
+                prodObj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                db.collection("products").add(prodObj).then(() => {
+                    alert("✓ Naya product Cloud Database me safaltapoorvak jud gaya!");
+                    resetProductForm();
+                }).catch(err => alert("Save Error: " + err.message));
             }
-
-            try {
-                localStorage.setItem('apnaVeda_products', JSON.stringify(products));
-            } catch (err) {
-                alert("तस्वीरों का साइज बड़ा होने के कारण सेव नहीं हो सका।");
-                return;
-            }
-
-            resetProductForm();
-            renderProducts();
-            updateProductDropdowns();
-            uploadedImagesList = [];
-            const previewContainer = document.getElementById('image-preview-container');
-            if (previewContainer) previewContainer.innerHTML = '';
         }
 
-        function editProduct(idx) {
-            const products = JSON.parse(localStorage.getItem('apnaVeda_products') || '[]');
-            const p = products[idx];
+        function editProduct(docId) {
+            const p = liveProducts.find(x => x.docId === docId);
             if (!p) return;
-            document.getElementById('p-edit-index').value = idx;
-            document.getElementById('p-name').value = p.name;
-            document.getElementById('p-price').value = p.price;
-            document.getElementById('p-mrp').value = p.mrp;
+
+            document.getElementById('p-edit-id').value = docId;
+            document.getElementById('p-name').value = p.name || '';
+            document.getElementById('p-price').value = p.price || '';
+            document.getElementById('p-mrp').value = p.mrp || '';
             document.getElementById('p-badge').value = p.badge || '';
             document.getElementById('p-weight').value = p.weight || '';
             if (document.getElementById('p-stock')) document.getElementById('p-stock').value = p.stock || 'in_stock';
             document.getElementById('p-image').value = p.image || '';
             document.getElementById('p-desc').value = p.desc || '';
             document.getElementById('product-form-title').innerText = `✏️ Edit Product: ${p.name}`;
-            document.getElementById('p-save-btn').innerText = "Update Product";
+            document.getElementById('p-save-btn').innerText = "Update Cloud Product";
             document.getElementById('p-cancel-btn').style.display = "inline-block";
             window.scrollTo({ top: 300, behavior: 'smooth' });
         }
 
         function resetProductForm() {
             document.getElementById('product-form').reset();
-            document.getElementById('p-edit-index').value = "-1";
+            document.getElementById('p-edit-id').value = "";
             document.getElementById('product-form-title').innerText = "➕ Add New Product / Edit Superfood";
-            document.getElementById('p-save-btn').innerText = "Save Product to Store";
+            document.getElementById('p-save-btn').innerText = "Save Product to Cloud Store";
             document.getElementById('p-cancel-btn').style.display = "none";
             if (document.getElementById('p-stock')) document.getElementById('p-stock').value = 'in_stock';
             uploadedImagesList = [];
@@ -1094,42 +1067,58 @@
             if (previewContainer) previewContainer.innerHTML = '';
         }
 
-        function deleteProduct(idx) {
-            if (confirm("Delete this product?")) {
-                let products = JSON.parse(localStorage.getItem('apnaVeda_products') || '[]');
-                products.splice(idx, 1);
-                localStorage.setItem('apnaVeda_products', JSON.stringify(products));
-                resetProductForm();
-                renderProducts();
-                updateProductDropdowns();
+        function deleteProduct(docId) {
+            if (confirm("Kya aap sach me is product ko Cloud Database se delete karna chahte hain?")) {
+                db.collection("products").doc(docId).delete().then(() => {
+                    alert("✓ Product Cloud Database se permanently delete ho gaya!");
+                    resetProductForm();
+                }).catch(err => alert("Delete error: " + err.message));
             }
         }
 
-        function renderReviewsTable() {
-            const tbody = document.getElementById('reviews-tbody');
-            if (!tbody) return;
-            const reviews = JSON.parse(localStorage.getItem('apnaVeda_reviews') || '[]');
+        function updateProductDropdowns() {
+            const reviewSelect = document.getElementById('rev-product-select');
+            const aplusSelect = document.getElementById('aplus-product-select');
+            if (!liveProducts || liveProducts.length === 0) return;
 
-            if (reviews.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No reviews yet.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = '';
-            reviews.forEach((r, idx) => {
-                let stars = "★".repeat(r.rating || 5);
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td><strong>${r.productName}</strong></td>
-                        <td>${r.reviewerName} ${r.verified ? '<span style="color:#16a34a; font-weight:bold; font-size:11px;">✓</span>' : ''}</td>
-                        <td style="color:#f59e0b; font-size:14px;">${stars}</td>
-                        <td style="max-width:350px;">${r.comment}</td>
-                        <td>${r.date}</td>
-                        <td><button onclick="deleteReview(${idx})" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
-                    </tr>
-                `;
+            let optionsHtml = '';
+            liveProducts.forEach(p => {
+                if (p.name && p.name.trim()) {
+                    optionsHtml += `<option value="${p.name.trim()}">${p.name.trim()}</option>`;
+                }
             });
+
+            if (reviewSelect) reviewSelect.innerHTML = optionsHtml;
+            if (aplusSelect) aplusSelect.innerHTML = optionsHtml;
+        }
+
+        // 2. REVIEWS: FIRESTORE DIRECT
+        function listenToLiveReviews() {
+            db.collection("reviews").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+                const tbody = document.getElementById('reviews-tbody');
+                if (!tbody) return;
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No reviews in Firestore yet.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = '';
+                let idx = 1;
+                snapshot.forEach(doc => {
+                    const r = doc.data();
+                    let stars = "★".repeat(r.rating || 5);
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${idx++}</td>
+                            <td><strong>${r.productName || ''}</strong></td>
+                            <td>${r.reviewerName || ''} ${r.verified ? '<span style="color:#16a34a; font-weight:bold; font-size:11px;">✓</span>' : ''}</td>
+                            <td style="color:#f59e0b; font-size:14px;">${stars}</td>
+                            <td style="max-width:350px;">${r.comment || ''}</td>
+                            <td>${r.date || 'Recent'}</td>
+                            <td><button onclick="deleteReviewCloud('${doc.id}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
+                        </tr>
+                    `;
+                });
+            }, err => console.error("Reviews sync error:", err));
         }
 
         function handleAdminAddReview(e) {
@@ -1140,50 +1129,50 @@
                 rating: Number(document.getElementById('rev-rating-input').value),
                 comment: document.getElementById('rev-comment-input').value.trim(),
                 date: document.getElementById('rev-date-input').value.trim(),
-                verified: document.getElementById('rev-verified-input').value === 'true'
+                verified: document.getElementById('rev-verified-input').value === 'true',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            let reviews = JSON.parse(localStorage.getItem('apnaVeda_reviews') || '[]');
-            reviews.unshift(newRev);
-            localStorage.setItem('apnaVeda_reviews', JSON.stringify(reviews));
-
-            document.getElementById('admin-review-form').reset();
-            document.getElementById('rev-date-input').value = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            alert("✓ 5-Star Review added successfully!");
-            renderReviewsTable();
+            db.collection("reviews").add(newRev).then(() => {
+                document.getElementById('admin-review-form').reset();
+                document.getElementById('rev-date-input').value = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                alert("✓ Review Cloud Database me add ho gaya!");
+            }).catch(err => alert("Error adding review: " + err.message));
         }
 
-        function deleteReview(idx) {
-            if (confirm("Delete this review?")) {
-                let reviews = JSON.parse(localStorage.getItem('apnaVeda_reviews') || '[]');
-                reviews.splice(idx, 1);
-                localStorage.setItem('apnaVeda_reviews', JSON.stringify(reviews));
-                renderReviewsTable();
+        function deleteReviewCloud(docId) {
+            if (confirm("Delete this review from Cloud?")) {
+                db.collection("reviews").doc(docId).delete().then(() => {
+                    alert("✓ Review deleted!");
+                }).catch(err => alert("Error: " + err.message));
             }
         }
 
+        // 3. AMAZON A+ CONTENT
         function loadProductAPlusData() {
             const prodName = document.getElementById('aplus-product-select').value;
-            const allAPlus = JSON.parse(localStorage.getItem('apnaVeda_aplus_data') || '{}');
-            const data = allAPlus[prodName] || {};
-
-            document.getElementById('aplus-banner-img').value = data.bannerImg || "images/banner.jpg";
-            document.getElementById('aplus-f1-title').value = data.f1Title || "100% Pure & Shade-Dried";
-            document.getElementById('aplus-f1-desc').value = data.f1Desc || "Sun-damage protected shade drying preserves vitamins and chlorophyll.";
-            document.getElementById('aplus-f2-title').value = data.f2Title || "NABL Lab Tested Certified";
-            document.getElementById('aplus-f2-desc').value = data.f2Desc || "Zero heavy metals, pesticide-free verification in accredited labs.";
-            document.getElementById('aplus-f3-title').value = data.f3Title || "Micro-Pulverized Texture";
-            document.getElementById('aplus-f3-desc').value = data.f3Desc || "Super-fine grinding ensures smooth mix in water and meals.";
-            document.getElementById('aplus-sourcing').value = data.sourcing || "Organically grown by local farmers with zero chemical fertilizers, hand-harvested and hygienically processed at our Mau, Uttar Pradesh unit.";
-            document.getElementById('aplus-nutrition').value = data.nutrition || "7x Vitamin C of Oranges, 4x Calcium of Milk, 4x Vitamin A of Carrots, 90+ Nutrients & 46 Antioxidants.";
+            if (!prodName) return;
+            db.collection("aplus_content").doc(encodeURIComponent(prodName)).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('aplus-banner-img').value = data.bannerImg || "images/banner.jpg";
+                    document.getElementById('aplus-f1-title').value = data.f1Title || "";
+                    document.getElementById('aplus-f1-desc').value = data.f1Desc || "";
+                    document.getElementById('aplus-f2-title').value = data.f2Title || "";
+                    document.getElementById('aplus-f2-desc').value = data.f2Desc || "";
+                    document.getElementById('aplus-f3-title').value = data.f3Title || "";
+                    document.getElementById('aplus-f3-desc').value = data.f3Desc || "";
+                    document.getElementById('aplus-sourcing').value = data.sourcing || "";
+                    document.getElementById('aplus-nutrition').value = data.nutrition || "";
+                }
+            });
         }
 
         function handleSaveAPlusContent(e) {
             e.preventDefault();
             const prodName = document.getElementById('aplus-product-select').value;
-            let allAPlus = JSON.parse(localStorage.getItem('apnaVeda_aplus_data') || '{}');
-
-            allAPlus[prodName] = {
+            const content = {
+                productName: prodName,
                 bannerImg: document.getElementById('aplus-banner-img').value.trim(),
                 f1Title: document.getElementById('aplus-f1-title').value.trim(),
                 f1Desc: document.getElementById('aplus-f1-desc').value.trim(),
@@ -1192,170 +1181,114 @@
                 f3Title: document.getElementById('aplus-f3-title').value.trim(),
                 f3Desc: document.getElementById('aplus-f3-desc').value.trim(),
                 sourcing: document.getElementById('aplus-sourcing').value.trim(),
-                nutrition: document.getElementById('aplus-nutrition').value.trim()
+                nutrition: document.getElementById('aplus-nutrition').value.trim(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
-            localStorage.setItem('apnaVeda_aplus_data', JSON.stringify(allAPlus));
-            alert(`✓ Amazon A+ Content saved for: ${prodName}!`);
+            db.collection("aplus_content").doc(encodeURIComponent(prodName)).set(content, { merge: true }).then(() => {
+                alert(`✓ A+ Content Cloud me save ho gaya: ${prodName}`);
+            }).catch(err => alert("Error saving A+ Content: " + err.message));
         }
 
-        function renderOrders() {
-            const tbody = document.getElementById('orders-tbody');
-            if (!tbody) return;
-            const orders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
-            if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#888;">No orders received yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            orders.slice().reverse().forEach(o => {
-                const itemsStr = (o.items || []).map(i => `${i.name} (x${i.quantity || 1})`).join(", ");
-                const st = o.status || "Confirmed";
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${o.orderId || 'N/A'}</strong></td>
-                        <td><strong>${o.name || 'Customer'}</strong><br><a href="https://wa.me/91${o.phone}" target="_blank" style="color:var(--primary); font-weight:bold; text-decoration:none;">${o.phone} ↗</a></td>
-                        <td>${o.address || ''}, ${o.city || ''} - ${o.pincode || ''}</td>
-                        <td>${itemsStr}</td>
-                        <td><span class="badge" style="background:#dcfce7; color:#15803d; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px;">${o.paymentMethod || 'COD'}</span></td>
-                        <td>
-                            <div style="display:flex; flex-direction:column; gap:4px; max-width:180px;">
-                                <select id="st-${o.orderId}" style="margin:0; padding:3px;">
-                                    <option value="Confirmed" ${st==='Confirmed'?'selected':''}>Confirmed</option>
-                                    <option value="Shipped" ${st==='Shipped'?'selected':''}>Shipped 🚚</option>
-                                    <option value="Delivered" ${st==='Delivered'?'selected':''}>Delivered 🏠</option>
-                                    <option value="Cancelled" ${st==='Cancelled'?'selected':''}>Cancelled ✕</option>
-                                </select>
-                                <select id="cr-${o.orderId}" style="margin:0; padding:3px; font-size:11px;">
-                                    <option value="Delhivery" ${o.courierName==='Delhivery'?'selected':''}>Delhivery</option>
-                                    <option value="Shiprocket" ${o.courierName==='Shiprocket'?'selected':''}>Shiprocket</option>
-                                    <option value="Shree Anjani" ${o.courierName==='Shree Anjani'?'selected':''}>Shree Anjani</option>
-                                    <option value="India Post" ${o.courierName==='India Post'?'selected':''}>India Post</option>
-                                </select>
-                                <input type="text" id="awb-${o.orderId}" placeholder="Enter AWB" value="${o.awbNumber || ''}" style="margin:0; padding:3px; font-size:11px;">
-                                <button onclick="saveDispatch('${o.orderId}')" class="btn btn-green" style="padding:4px; font-size:11px;">Save Tracking</button>
-                            </div>
-                        </td>
-                        <td>${o.orderDate || 'Recent'}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function saveDispatch(orderId) {
-            const status = document.getElementById(`st-${orderId}`).value;
-            const courier = document.getElementById(`cr-${orderId}`).value;
-            const awb = document.getElementById(`awb-${orderId}`).value.trim();
-
-            let orders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
-            orders = orders.map(o => {
-                if (o.orderId === orderId) {
-                    o.status = status;
-                    o.courierName = courier;
-                    o.awbNumber = awb;
+        // 4. BLOGS: FIRESTORE DIRECT
+        function listenToLiveBlogs() {
+            db.collection("blogs").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                const tbody = document.getElementById('blogs-tbody');
+                if (!tbody) return;
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#888;">No blogs in Firestore.</td></tr>`;
+                    return;
                 }
-                return o;
-            });
-            localStorage.setItem('apnaVeda_orders', JSON.stringify(orders));
-            alert(`Order ${orderId} updated!`);
-            renderCounters();
-        }
-
-        function renderBlogs() {
-            const tbody = document.getElementById('blogs-tbody');
-            if (!tbody) return;
-            const blogs = JSON.parse(localStorage.getItem('apnaVeda_blogs') || '[]');
-            if (blogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#888;">No blog articles published yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            blogs.forEach((b, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td><strong>${b.title}</strong></td>
-                        <td>${b.author}</td>
-                        <td>${b.date}</td>
-                        <td><button onclick="deleteBlog(${idx})" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML = '';
+                let idx = 1;
+                snapshot.forEach(doc => {
+                    const b = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${idx++}</td>
+                            <td><strong>${b.title}</strong></td>
+                            <td>${b.author}</td>
+                            <td>${b.date || 'Recent'}</td>
+                            <td><button onclick="deleteBlogCloud('${doc.id}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
+                        </tr>
+                    `;
+                });
             });
         }
 
         function handleSaveBlog(e) {
             e.preventDefault();
             const newBlog = {
-                id: "BLG" + Date.now(),
                 title: document.getElementById('b-title').value.trim(),
                 author: document.getElementById('b-author').value.trim(),
                 image: document.getElementById('b-image').value.trim(),
                 readtime: document.getElementById('b-readtime').value.trim(),
                 content: document.getElementById('b-content').value.trim(),
-                date: new Date().toLocaleDateString('en-IN')
+                date: new Date().toLocaleDateString('en-IN'),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            let blogs = JSON.parse(localStorage.getItem('apnaVeda_blogs') || '[]');
-            blogs.push(newBlog);
-            localStorage.setItem('apnaVeda_blogs', JSON.stringify(blogs));
-            document.getElementById('blog-form').reset();
-            alert("✓ Blog post published!");
-            renderBlogs();
+
+            db.collection("blogs").add(newBlog).then(() => {
+                document.getElementById('blog-form').reset();
+                alert("✓ Blog post Cloud Firestore par publish ho gaya!");
+            }).catch(err => alert("Error publishing blog: " + err.message));
         }
 
-        function deleteBlog(idx) {
-            if (confirm("Delete blog?")) {
-                let blogs = JSON.parse(localStorage.getItem('apnaVeda_blogs') || '[]');
-                blogs.splice(idx, 1);
-                localStorage.setItem('apnaVeda_blogs', JSON.stringify(blogs));
-                renderBlogs();
+        function deleteBlogCloud(docId) {
+            if (confirm("Delete this blog from Cloud?")) {
+                db.collection("blogs").doc(docId).delete().then(() => {
+                    alert("✓ Blog deleted!");
+                }).catch(err => alert("Error: " + err.message));
             }
         }
 
-        function renderLabReports() {
-            const tbody = document.getElementById('lab-tbody');
-            if (!tbody) return;
-            const reports = JSON.parse(localStorage.getItem('apnaVeda_lab_reports') || '[]');
-            if (reports.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No lab reports uploaded yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            reports.forEach((r, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td><strong>${r.product}</strong></td>
-                        <td>${r.batch}</td>
-                        <td>${r.lab}</td>
-                        <td><span style="color:#1b5e20; font-weight:600;">${r.summary}</span></td>
-                        <td><a href="${r.pdfLink}" target="_blank" style="color:#2563eb; font-weight:bold;">View PDF ↗</a></td>
-                        <td><button onclick="deleteLabReport(${idx})" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
-                    </tr>
-                `;
+        // 5. NABL LAB REPORTS: FIRESTORE DIRECT
+        function listenToLiveLabReports() {
+            db.collection("lab_reports").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+                const tbody = document.getElementById('lab-tbody');
+                if (!tbody) return;
+                if (snapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px; color:#888;">No lab reports in Firestore.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = '';
+                let idx = 1;
+                snapshot.forEach(doc => {
+                    const r = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${idx++}</td>
+                            <td><strong>${r.product}</strong></td>
+                            <td>${r.batch}</td>
+                            <td>${r.lab}</td>
+                            <td><span style="color:#1b5e20; font-weight:600;">${r.summary}</span></td>
+                            <td><a href="${r.pdfLink}" target="_blank" style="color:#2563eb; font-weight:bold;">View Document ↗</a></td>
+                            <td><button onclick="deleteLabReportCloud('${doc.id}')" class="btn btn-red" style="padding:4px 8px; font-size:11px;">Delete</button></td>
+                        </tr>
+                    `;
+                });
             });
         }
 
-        function handleSaveLabReport(e) {
-            e.preventDefault();
-            saveDirectLabReport();
-        }
-
-        function deleteLabReport(idx) {
-            if (confirm("Delete report?")) {
-                let reports = JSON.parse(localStorage.getItem('apnaVeda_lab_reports') || '[]');
-                reports.splice(idx, 1);
-                localStorage.setItem('apnaVeda_lab_reports', JSON.stringify(reports));
-                renderLabReports();
+        function deleteLabReportCloud(docId) {
+            if (confirm("Delete this lab report from Cloud?")) {
+                db.collection("lab_reports").doc(docId).delete().then(() => {
+                    alert("✓ Lab Report deleted!");
+                }).catch(err => alert("Error: " + err.message));
             }
         }
 
-        // ================= POLICIES AUTO-SYNC =================
-        function renderPolicies() {
-            const p = JSON.parse(localStorage.getItem('apnaVeda_policies') || '{}');
-            if (p.privacy && document.getElementById('pol-privacy')) document.getElementById('pol-privacy').value = p.privacy;
-            if (p.terms && document.getElementById('pol-terms')) document.getElementById('pol-terms').value = p.terms;
-            if (p.refund && document.getElementById('pol-refund')) document.getElementById('pol-refund').value = p.refund;
-            if (p.shipping && document.getElementById('pol-shipping')) document.getElementById('pol-shipping').value = p.shipping;
+        // 6. LEGAL POLICIES: FIRESTORE DIRECT
+        function loadLivePolicies() {
+            db.collection("settings").doc("policies").get().then(doc => {
+                if (doc.exists) {
+                    const p = doc.data();
+                    if (p.privacy && document.getElementById('pol-privacy')) document.getElementById('pol-privacy').value = p.privacy;
+                    if (p.terms && document.getElementById('pol-terms')) document.getElementById('pol-terms').value = p.terms;
+                    if (p.refund && document.getElementById('pol-refund')) document.getElementById('pol-refund').value = p.refund;
+                    if (p.shipping && document.getElementById('pol-shipping')) document.getElementById('pol-shipping').value = p.shipping;
+                }
+            });
         }
 
         function handleSavePolicies(e) {
@@ -1364,104 +1297,26 @@
                 privacy: document.getElementById('pol-privacy') ? document.getElementById('pol-privacy').value.trim() : '',
                 terms: document.getElementById('pol-terms') ? document.getElementById('pol-terms').value.trim() : '',
                 refund: document.getElementById('pol-refund') ? document.getElementById('pol-refund').value.trim() : '',
-                shipping: document.getElementById('pol-shipping') ? document.getElementById('pol-shipping').value.trim() : ''
+                shipping: document.getElementById('pol-shipping') ? document.getElementById('pol-shipping').value.trim() : '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            localStorage.setItem('apnaVeda_policies', JSON.stringify(policies));
-            alert("✓ All 4 Legal Policies Successfully Saved & Updated on Store!");
+
+            db.collection("settings").doc("policies").set(policies, { merge: true }).then(() => {
+                alert("✓ Policies Cloud me save ho gayi!");
+            }).catch(err => alert("Policies Error: " + err.message));
         }
 
-        function renderCustomers() {
-            const tbody = document.getElementById('customers-tbody');
-            if (!tbody) return;
-            const regUsers = JSON.parse(localStorage.getItem('apnaVeda_registered_customers') || '[]');
-            const orders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
-            const userMap = new Map();
-
-            regUsers.forEach(u => { if (u.phone) userMap.set(u.phone, { name: u.name || "Customer", phone: u.phone, email: u.email || "N/A", date: u.date || "Registered" }); });
-            orders.forEach(o => { if (o.phone && !userMap.has(o.phone)) userMap.set(o.phone, { name: o.name || "Customer", phone: o.phone, email: o.email || "N/A", date: o.orderDate || "Ordered" }); });
-
-            const list = Array.from(userMap.values());
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:25px; color:#888;">No customers registered yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            list.forEach((c, idx) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td><strong>${c.name}</strong></td>
-                        <td><a href="tel:${c.phone}" style="color:var(--primary); font-weight:bold; text-decoration:none;">${c.phone}</a></td>
-                        <td>${c.email}</td>
-                        <td>${c.date}</td>
-                        <td><a href="https://wa.me/91${c.phone}?text=Namaste%20${encodeURIComponent(c.name)}" target="_blank" style="padding:4px 8px; background:#25D366; color:white; border-radius:4px; text-decoration:none; font-size:11px; font-weight:bold;">WhatsApp ↗</a></td>
-                    </tr>
-                `;
+        // 7. SEO METADATA: FIRESTORE DIRECT
+        function loadLiveSEO() {
+            db.collection("settings").doc("seo").get().then(doc => {
+                if (doc.exists) {
+                    const seo = doc.data();
+                    if (seo.title && document.getElementById('seo-title')) document.getElementById('seo-title').value = seo.title;
+                    if (seo.keywords && document.getElementById('seo-keywords')) document.getElementById('seo-keywords').value = seo.keywords;
+                    if (seo.desc && document.getElementById('seo-desc')) document.getElementById('seo-desc').value = seo.desc;
+                    if (seo.gsc && document.getElementById('seo-gsc')) document.getElementById('seo-gsc').value = seo.gsc;
+                }
             });
-        }
-
-        function downloadCustomerExcel() {
-            const regUsers = JSON.parse(localStorage.getItem('apnaVeda_registered_customers') || '[]');
-            const orders = JSON.parse(localStorage.getItem('apnaVeda_orders') || '[]');
-            const userMap = new Map();
-
-            regUsers.forEach(u => { if (u.phone) userMap.set(u.phone, { name: u.name || "Customer", phone: u.phone, email: u.email || "", date: u.date || "" }); });
-            orders.forEach(o => { if (o.phone && !userMap.has(o.phone)) userMap.set(o.phone, { name: o.name || "Customer", phone: o.phone, email: o.email || "", date: o.orderDate || "" }); });
-
-            const list = Array.from(userMap.values());
-            if (list.length === 0) { alert("No customers to export!"); return; }
-
-            let csv = "data:text/csv;charset=utf-8,Sr No,Customer Name,Mobile Number,Email,Date\n";
-            list.forEach((c, i) => { csv += `${i + 1},"${c.name}","'${c.phone}","${c.email}","${c.date}"\n`; });
-
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csv));
-            link.setAttribute("download", `apnaVeda_Customers_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function renderCashback() {
-            const tbody = document.getElementById('cashback-tbody');
-            if (!tbody) return;
-            const claims = JSON.parse(localStorage.getItem('apnaVeda_cashbacks') || '[]');
-            if (claims.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#888;">No cashback claims submitted yet.</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            claims.slice().reverse().forEach((cl, idx) => {
-                const isPaid = cl.status === 'Approved';
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${cl.claimId}</strong></td>
-                        <td><span style="background:#fee2e2; color:#b91c1c; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px;">${cl.couponCode} (USED)</span></td>
-                        <td><strong>${cl.name}</strong><br><small>${cl.phone}</small></td>
-                        <td><strong style="color:var(--primary);">${cl.upiId}</strong></td>
-                        <td>${cl.date}</td>
-                        <td><span class="badge" style="background:#dcfce7; color:#15803d; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:11px;">${cl.status}</span></td>
-                        <td>${!isPaid ? `<button onclick="markPaid(${idx})" class="btn btn-green" style="padding:4px 8px; font-size:11px;">Pay ₹30 UPI</button>` : '<span style="color:var(--primary); font-weight:bold;">✓ Paid</span>'}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function markPaid(idx) {
-            let claims = JSON.parse(localStorage.getItem('apnaVeda_cashbacks') || '[]');
-            claims[idx].status = 'Approved';
-            localStorage.setItem('apnaVeda_cashbacks', JSON.stringify(claims));
-            alert("Cashback marked as Paid!");
-            renderCashback();
-        }
-
-        // ================= SEO AUTO-SYNC =================
-        function renderSEO() {
-            const seo = JSON.parse(localStorage.getItem('apnaVeda_seo') || '{}');
-            if (seo.title && document.getElementById('seo-title')) document.getElementById('seo-title').value = seo.title;
-            if (seo.keywords && document.getElementById('seo-keywords')) document.getElementById('seo-keywords').value = seo.keywords;
-            if (seo.desc && document.getElementById('seo-desc')) document.getElementById('seo-desc').value = seo.desc;
-            if (seo.gsc && document.getElementById('seo-gsc')) document.getElementById('seo-gsc').value = seo.gsc;
         }
 
         function handleSaveSEO(e) {
@@ -1470,153 +1325,87 @@
                 title: document.getElementById('seo-title') ? document.getElementById('seo-title').value.trim() : '',
                 keywords: document.getElementById('seo-keywords') ? document.getElementById('seo-keywords').value.trim() : '',
                 desc: document.getElementById('seo-desc') ? document.getElementById('seo-desc').value.trim() : '',
-                gsc: document.getElementById('seo-gsc') ? document.getElementById('seo-gsc').value.trim() : ''
+                gsc: document.getElementById('seo-gsc') ? document.getElementById('seo-gsc').value.trim() : '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
-            localStorage.setItem('apnaVeda_seo', JSON.stringify(seo));
-            alert("✓ SEO metadata updated successfully!");
+
+            db.collection("settings").doc("seo").set(seo, { merge: true }).then(() => {
+                alert("✓ SEO Metadata Cloud me save ho gaya!");
+            }).catch(err => alert("SEO Error: " + err.message));
         }
 
-        // ================= FULL MASTER SETTINGS =================
-        function renderFullSettings() {
-            const s = JSON.parse(localStorage.getItem('apnaVeda_site_settings') || '{}');
-            if (s.logoUrl && document.getElementById('set-logo-url')) document.getElementById('set-logo-url').value = s.logoUrl;
-            if (s.faviconUrl && document.getElementById('set-favicon-url')) document.getElementById('set-favicon-url').value = s.faviconUrl;
-            if (s.annStatus && document.getElementById('set-ann-status')) document.getElementById('set-ann-status').value = s.annStatus;
-            if (s.annBg && document.getElementById('set-ann-bg')) document.getElementById('set-ann-bg').value = s.annBg;
-            if (s.annText && document.getElementById('set-ann-text')) document.getElementById('set-ann-text').value = s.annText;
-            if (s.bannerTitle && document.getElementById('set-banner-title')) document.getElementById('set-banner-title').value = s.bannerTitle;
-            if (s.bannerImg && document.getElementById('set-banner-img')) document.getElementById('set-banner-img').value = s.bannerImg;
-            if (s.ytVideo && document.getElementById('set-yt-video')) document.getElementById('set-yt-video').value = s.ytVideo;
-            if (s.ytTitle && document.getElementById('set-yt-title')) document.getElementById('set-yt-title').value = s.ytTitle;
-            if (s.phone && document.getElementById('set-phone')) document.getElementById('set-phone').value = s.phone;
-            if (s.email && document.getElementById('set-email')) document.getElementById('set-email').value = s.email;
-            if (s.shipAddr && document.getElementById('set-ship-addr')) document.getElementById('set-ship-addr').value = s.shipAddr;
-            if (s.officeAddr && document.getElementById('set-office-addr')) document.getElementById('set-office-addr').value = s.officeAddr;
-            
-            // Social Networks
-            if (s.insta && document.getElementById('set-soc-insta')) document.getElementById('set-soc-insta').value = s.insta;
-            if (s.fb && document.getElementById('set-soc-fb')) document.getElementById('set-soc-fb').value = s.fb;
-            if (s.youtube && document.getElementById('set-soc-yt')) document.getElementById('set-soc-yt').value = s.youtube;
-            if (s.pin && document.getElementById('set-soc-pin')) document.getElementById('set-soc-pin').value = s.pin;
-            if (s.linkedin && document.getElementById('set-soc-linkedin')) document.getElementById('set-soc-linkedin').value = s.linkedin;
-            if (s.xTwitter && document.getElementById('set-soc-x')) document.getElementById('set-soc-x').value = s.xTwitter;
-
-            // Footer
-            if (s.footerAbout && document.getElementById('set-footer-about')) document.getElementById('set-footer-about').value = s.footerAbout;
-            if (s.footerCopy && document.getElementById('set-footer-copy')) document.getElementById('set-footer-copy').value = s.footerCopy;
+        // 8. MASTER SETTINGS: FIRESTORE DIRECT
+        function loadLiveFullSettings() {
+            db.collection("settings").doc("homepage").get().then(doc => {
+                if (doc.exists) {
+                    const s = doc.data();
+                    if (s.logoUrl && document.getElementById('set-logo-url')) document.getElementById('set-logo-url').value = s.logoUrl;
+                    if (s.faviconUrl && document.getElementById('set-favicon-url')) document.getElementById('set-favicon-url').value = s.faviconUrl;
+                    if (s.annStatus && document.getElementById('set-ann-status')) document.getElementById('set-ann-status').value = s.annStatus;
+                    if (s.annBg && document.getElementById('set-ann-bg')) document.getElementById('set-ann-bg').value = s.annBg;
+                    if (s.annText && document.getElementById('set-ann-text')) document.getElementById('set-ann-text').value = s.annText;
+                    if (s.bannerTitle && document.getElementById('set-banner-title')) document.getElementById('set-banner-title').value = s.bannerTitle;
+                    if (s.bannerImg && document.getElementById('set-banner-img')) document.getElementById('set-banner-img').value = s.bannerImg;
+                    if (s.ytVideo && document.getElementById('set-yt-video')) document.getElementById('set-yt-video').value = s.ytVideo;
+                    if (s.ytTitle && document.getElementById('set-yt-title')) document.getElementById('set-yt-title').value = s.ytTitle;
+                    if (s.phone && document.getElementById('set-phone')) document.getElementById('set-phone').value = s.phone;
+                    if (s.email && document.getElementById('set-email')) document.getElementById('set-email').value = s.email;
+                    if (s.shipAddr && document.getElementById('set-ship-addr')) document.getElementById('set-ship-addr').value = s.shipAddr;
+                    if (s.officeAddr && document.getElementById('set-office-addr')) document.getElementById('set-office-addr').value = s.officeAddr;
+                    if (s.insta && document.getElementById('set-soc-insta')) document.getElementById('set-soc-insta').value = s.insta;
+                    if (s.fb && document.getElementById('set-soc-fb')) document.getElementById('set-soc-fb').value = s.fb;
+                    if (s.youtube && document.getElementById('set-soc-yt')) document.getElementById('set-soc-yt').value = s.youtube;
+                    if (s.pin && document.getElementById('set-soc-pin')) document.getElementById('set-soc-pin').value = s.pin;
+                    if (s.linkedin && document.getElementById('set-soc-linkedin')) document.getElementById('set-soc-linkedin').value = s.linkedin;
+                    if (s.xTwitter && document.getElementById('set-soc-x')) document.getElementById('set-soc-x').value = s.xTwitter;
+                    if (s.footerAbout && document.getElementById('set-footer-about')) document.getElementById('set-footer-about').value = s.footerAbout;
+                    if (s.footerCopy && document.getElementById('set-footer-copy')) document.getElementById('set-footer-copy').value = s.footerCopy;
+                }
+            });
         }
 
         function handleSaveFullSettings(e) {
             if (e) e.preventDefault();
-
-            try {
-                // YouTube Video ID auto-extract logic
-                let ytRaw = document.getElementById('set-yt-video') ? document.getElementById('set-yt-video').value.trim() : '';
-                if (ytRaw.includes('youtu.be/')) {
-                    ytRaw = ytRaw.split('youtu.be/')[1].split('?')[0];
-                } else if (ytRaw.includes('watch?v=')) {
-                    ytRaw = ytRaw.split('watch?v=')[1].split('&')[0];
-                } else if (ytRaw.includes('embed/')) {
-                    ytRaw = ytRaw.split('embed/')[1].split('?')[0];
-                }
-
-                const fullSettings = {
-                    logoUrl: document.getElementById('set-logo-url') ? document.getElementById('set-logo-url').value.trim() : 'images/logo.png',
-                    faviconUrl: document.getElementById('set-favicon-url') ? document.getElementById('set-favicon-url').value.trim() : 'images/favicon.ico',
-                    annStatus: document.getElementById('set-ann-status') ? document.getElementById('set-ann-status').value : 'enabled',
-                    annBg: document.getElementById('set-ann-bg') ? document.getElementById('set-ann-bg').value.trim() : '#1b5e20',
-                    annText: document.getElementById('set-ann-text') ? document.getElementById('set-ann-text').value.trim() : '',
-                    bannerTitle: document.getElementById('set-banner-title') ? document.getElementById('set-banner-title').value.trim() : '',
-                    bannerImg: document.getElementById('set-banner-img') ? document.getElementById('set-banner-img').value.trim() : 'images/banner.jpg',
-                    ytVideo: ytRaw,
-                    ytTitle: document.getElementById('set-yt-title') ? document.getElementById('set-yt-title').value.trim() : '',
-                    phone: document.getElementById('set-phone') ? document.getElementById('set-phone').value.trim() : '',
-                    email: document.getElementById('set-email') ? document.getElementById('set-email').value.trim() : '',
-                    shipAddr: document.getElementById('set-ship-addr') ? document.getElementById('set-ship-addr').value.trim() : '',
-                    officeAddr: document.getElementById('set-office-addr') ? document.getElementById('set-office-addr').value.trim() : '',
-                    insta: document.getElementById('set-soc-insta') ? document.getElementById('set-soc-insta').value.trim() : '',
-                    fb: document.getElementById('set-soc-fb') ? document.getElementById('set-soc-fb').value.trim() : '',
-                    youtube: document.getElementById('set-soc-yt') ? document.getElementById('set-soc-yt').value.trim() : '',
-                    pin: document.getElementById('set-soc-pin') ? document.getElementById('set-soc-pin').value.trim() : '',
-                    linkedin: document.getElementById('set-soc-linkedin') ? document.getElementById('set-soc-linkedin').value.trim() : '',
-                    xTwitter: document.getElementById('set-soc-x') ? document.getElementById('set-soc-x').value.trim() : '',
-                    footerAbout: document.getElementById('set-footer-about') ? document.getElementById('set-footer-about').value.trim() : '',
-                    footerCopy: document.getElementById('set-footer-copy') ? document.getElementById('set-footer-copy').value.trim() : ''
-                };
-
-                localStorage.setItem('apnaVeda_site_settings', JSON.stringify(fullSettings));
-                alert("✓ Sabhi settings (Banner, Video, Social Links, Address, Contacts & Footer) safaltapoorvak save ho gaye!");
-            } catch (err) {
-                alert("⚠️ Storage limit error: Kripya banner me photo upload karne ke bajaye seedhe link (e.g. images/banner.jpg) likhein.");
-                console.error(err);
+            let ytRaw = document.getElementById('set-yt-video') ? document.getElementById('set-yt-video').value.trim() : '';
+            if (ytRaw.includes('youtu.be/')) {
+                ytRaw = ytRaw.split('youtu.be/')[1].split('?')[0];
+            } else if (ytRaw.includes('watch?v=')) {
+                ytRaw = ytRaw.split('watch?v=')[1].split('&')[0];
+            } else if (ytRaw.includes('embed/')) {
+                ytRaw = ytRaw.split('embed/')[1].split('?')[0];
             }
+
+            const fullSettings = {
+                logoUrl: document.getElementById('set-logo-url') ? document.getElementById('set-logo-url').value.trim() : 'images/logo.png',
+                faviconUrl: document.getElementById('set-favicon-url') ? document.getElementById('set-favicon-url').value.trim() : 'images/favicon.ico',
+                annStatus: document.getElementById('set-ann-status') ? document.getElementById('set-ann-status').value : 'enabled',
+                annBg: document.getElementById('set-ann-bg') ? document.getElementById('set-ann-bg').value.trim() : '#1b5e20',
+                annText: document.getElementById('set-ann-text') ? document.getElementById('set-ann-text').value.trim() : '',
+                bannerTitle: document.getElementById('set-banner-title') ? document.getElementById('set-banner-title').value.trim() : '',
+                bannerImg: document.getElementById('set-banner-img') ? document.getElementById('set-banner-img').value.trim() : 'images/banner.jpg',
+                ytVideo: ytRaw,
+                ytTitle: document.getElementById('set-yt-title') ? document.getElementById('set-yt-title').value.trim() : '',
+                phone: document.getElementById('set-phone') ? document.getElementById('set-phone').value.trim() : '',
+                email: document.getElementById('set-email') ? document.getElementById('set-email').value.trim() : '',
+                shipAddr: document.getElementById('set-ship-addr') ? document.getElementById('set-ship-addr').value.trim() : '',
+                officeAddr: document.getElementById('set-office-addr') ? document.getElementById('set-office-addr').value.trim() : '',
+                insta: document.getElementById('set-soc-insta') ? document.getElementById('set-soc-insta').value.trim() : '',
+                fb: document.getElementById('set-soc-fb') ? document.getElementById('set-soc-fb').value.trim() : '',
+                youtube: document.getElementById('set-soc-yt') ? document.getElementById('set-soc-yt').value.trim() : '',
+                pin: document.getElementById('set-soc-pin') ? document.getElementById('set-soc-pin').value.trim() : '',
+                linkedin: document.getElementById('set-soc-linkedin') ? document.getElementById('set-soc-linkedin').value.trim() : '',
+                xTwitter: document.getElementById('set-soc-x') ? document.getElementById('set-soc-x').value.trim() : '',
+                footerAbout: document.getElementById('set-footer-about') ? document.getElementById('set-footer-about').value.trim() : '',
+                footerCopy: document.getElementById('set-footer-copy') ? document.getElementById('set-footer-copy').value.trim() : '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            db.collection("settings").doc("homepage").set(fullSettings, { merge: true }).then(() => {
+                alert("✓ Sabhi Master Settings Cloud Firestore par save ho gayi!");
+            }).catch(err => alert("Settings Error: " + err.message));
         }
 
-        // ================= 3% AFFILIATE MANAGER =================
-        function renderAdminAffiliates() {
-            const tbody = document.getElementById('admin-affiliate-tbody');
-            if (!tbody) return;
-
-            const affData = JSON.parse(localStorage.getItem('apnaVeda_affiliates_data') || '{}');
-            tbody.innerHTML = '';
-
-            const partners = Object.keys(affData);
-            if (partners.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:18px; color:#94a3b8;">अभी तक कोई एफिलिएट पार्टनर रजिस्टर नहीं हुआ है।</td></tr>';
-                return;
-            }
-
-            partners.forEach(phone => {
-                const p = affData[phone];
-                const pay = p.payout || {};
-
-                let bankInfo = '<span style="color:#94a3b8; font-size:11px;">डिटेल्स नहीं भरी</span>';
-                if (pay.upi || pay.account) {
-                    bankInfo = `
-                        <div style="font-size:11px; line-height:1.4;">
-                            <strong>${pay.name || 'N/A'}</strong><br>
-                            ${pay.upi ? `<span style="color:#0284c7; font-weight:bold;">UPI: ${pay.upi}</span><br>` : ''}
-                            ${pay.account ? `<span>A/C: ${pay.account}</span><br><span>IFSC: ${pay.ifsc}</span>` : ''}
-                        </div>
-                    `;
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="padding:10px;"><strong>${phone}</strong></td>
-                    <td style="padding:10px;">${p.clicks || 0}</td>
-                    <td style="padding:10px;">${p.orders || 0}</td>
-                    <td style="padding:10px;">₹${p.salesTotal || 0}</td>
-                    <td style="padding:10px; color:#16a34a; font-weight:bold; font-size:14px;">₹${p.commission || 0}</td>
-                    <td style="padding:10px;">${bankInfo}</td>
-                    <td style="padding:10px;">
-                        <button type="button" class="btn btn-green" style="padding:5px 10px; font-size:11px;" onclick="payAffiliateCommission('${phone}', ${p.commission || 0})">Mark as Paid</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function payAffiliateCommission(phone, dueAmount) {
-            if (dueAmount <= 0) {
-                alert("इस पार्टनर का कोई कमीशन बाकी नहीं है!");
-                return;
-            }
-
-            if (!confirm(`${phone} को ₹${dueAmount} का कमीशन ट्रांसफर कर दिया गया है? इसे 'Paid' मार्क करें?`)) {
-                return;
-            }
-
-            let affData = JSON.parse(localStorage.getItem('apnaVeda_affiliates_data') || '{}');
-            if (affData[phone]) {
-                affData[phone].commission = 0;
-                localStorage.setItem('apnaVeda_affiliates_data', JSON.stringify(affData));
-                renderAdminAffiliates();
-                alert(`✓ ${phone} का कमीशन सफलता पूर्वक 'Paid' मार्क कर दिया गया!`);
-            }
-        }
-
-        // ================= ASSET UPLOADS (AUTO-COMPRESS ENGINE) =================
+        // ASSET UPLOAD LOGIC
         function uploadDirectLogo(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1660,78 +1449,6 @@
             };
             reader.readAsDataURL(file);
         }
-
-        function uploadDirectHeroBanner(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1000;
-                    const scale = MAX_WIDTH / img.width;
-                    canvas.width = (img.width > MAX_WIDTH) ? MAX_WIDTH : img.width;
-                    canvas.height = (img.width > MAX_WIDTH) ? (img.height * scale) : img.height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    const compressedBanner = canvas.toDataURL('image/jpeg', 0.65);
-
-                    const bInput = document.getElementById('set-banner-img');
-                    if (bInput) bInput.value = compressedBanner;
-
-                    const preview = document.getElementById('hero-banner-preview-area');
-                    if (preview) {
-                        preview.innerHTML = `<img src="${compressedBanner}" style="max-height: 70px; border-radius: 4px; border: 1px solid #1b5e20; padding: 2px;">`;
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function uploadDirectLabDoc(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const docData = e.target.result;
-                const input = document.getElementById('lab-pdf-link');
-                if (input) input.value = docData;
-                const status = document.getElementById('lab-upload-status');
-                if (status) status.innerText = `✓ ${file.name} attached!`;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function saveDirectLabReport() {
-            const p = document.getElementById('lab-product').value.trim();
-            const b = document.getElementById('lab-batch').value.trim();
-            const l = document.getElementById('lab-name').value.trim();
-            const s = document.getElementById('lab-summary').value.trim();
-            const f = document.getElementById('lab-pdf-link').value.trim();
-
-            if (!p || !f) {
-                alert("Product name aur Document select karein!");
-                return;
-            }
-
-            const rep = { id: "LAB" + Date.now(), product: p, batch: b, lab: l, summary: s, pdfLink: f };
-            let arr = JSON.parse(localStorage.getItem('apnaVeda_lab_reports') || '[]');
-            arr.push(rep);
-            localStorage.setItem('apnaVeda_lab_reports', JSON.stringify(arr));
-            document.getElementById('lab-form').reset();
-            alert("✓ Lab Report Added Successfully!");
-            renderLabReports();
-        }
     </script>
-    <!-- Firebase Core Libraries -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="admin.js"></script>
 </body>
 </html>
