@@ -1,3 +1,19 @@
+// Firebase Configuration & Initialization
+const firebaseConfig = {
+  apiKey: "AIzaSyAwaWZrrvMK-ySVJLuTSZy9dPf6ZwMDNKc",
+  authDomain: "apnaveda-b71dd.firebaseapp.com",
+  projectId: "apnaveda-b71dd",
+  storageBucket: "apnaveda-b71dd.firebasestorage.app",
+  messagingSenderId: "757724960467",
+  appId: "1:757724960467:web:f4bd04cb8bed1bf4a32626",
+  measurementId: "G-2D4CYL9MFL"
+};
+
+// Initialize Firebase & Firestore
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
 // apnaVeda™ - Complete Admin Control Engine
 
 // Page load hone par sabhi data render karein
