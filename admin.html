@@ -7,6 +7,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase Core Libraries -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script>
+  // Firebase Initialize
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwaWZrrvMK-ySVJLuTSZy9dPf6ZwMDNKc",
+    authDomain: "apnaveda-b71dd.firebaseapp.com",
+    projectId: "apnaveda-b71dd",
+    storageBucket: "apnaveda-b71dd.firebasestorage.app",
+    messagingSenderId: "757724960467",
+    appId: "1:757724960467:web:f4bd04cb8bed1bf4a32626",
+    measurementId: "G-2D4CYL9MFL"
+  };
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  window.db = firebase.firestore();
+</script>
     <style>
         :root {
             --primary: #1b5e20;
